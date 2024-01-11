@@ -1,27 +1,9 @@
-import argparse
-
-
-def parse_arguments() -> argparse.Namespace():
-    parser = argparse.ArgumentParser(
-        description="Compares two configuration files and shows a difference."
-    )
-    parser.add_argument("first_file")
-    parser.add_argument("second_file")
-    parser.add_argument(
-        "-f", "--format",
-        metavar="FORMAT",
-        choices=["plain", "json"],
-        help="set format of output",
-        default="plain",
-    )
-    return parser.parse_args()
+from gendiff import logic
 
 
 def main() -> None:
-    args: argparse.Namespace = parse_arguments()
-    print("Первый файл:", args.first_file)
-    print("Второй файл:", args.second_file)
-    print("Формат:", args.format)
+    args = logic.parse_arguments_from_command()
+    return logic.generate_diff(args.first_file, args.second_file)
 
 
 if __name__ == "__main__":
