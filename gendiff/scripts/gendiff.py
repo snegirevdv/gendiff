@@ -1,9 +1,9 @@
-from gendiff import logic
+import gendiff
 
 
 def main() -> None:
-    args = logic.parse_arguments_from_command()
-    return logic.generate_diff(args.first_file, args.second_file)
+    args = gendiff.parse_arguments_from_command()
+    return gendiff.generate_diff(args.first_file, args.second_file)
 
 
 if __name__ == "__main__":
