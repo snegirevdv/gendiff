@@ -15,3 +15,6 @@ package-install: # Install package
 
 package-reinstall: # Reinstall package
 	python3 -m pip install --user dist/*.whl --force-reinstall
+
+lint: # Run flake8
+	poetry run flake8
