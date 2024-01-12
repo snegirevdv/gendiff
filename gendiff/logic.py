@@ -1,5 +1,5 @@
-import json
 import argparse
+import json
 from typing import Any
 
 JSON_VALUE_CONVERTER = {
@@ -15,7 +15,7 @@ LINE_PREFIX_VALUES = {
 }
 
 
-def generate_diff(file1: str, file2: str) -> str:   
+def generate_diff(file1: str, file2: str) -> str:
     with open(file1) as file1, open(file2) as file2:
         json1: dict = json.load(file1)
         json2: dict = json.load(file2)
@@ -23,7 +23,10 @@ def generate_diff(file1: str, file2: str) -> str:
     return get_diff_report(merged_jsons)
 
 
-def merge_dicts_and_convert_values(dict1: dict, dict2: dict) -> dict[tuple, Any]:
+def merge_dicts_and_convert_values(
+    dict1: dict,
+    dict2: dict
+) -> dict[tuple, Any]:
     keys = set(dict1) | set(dict2)
     result = {}
     for key in keys:
@@ -49,7 +52,7 @@ def get_diff_report(data: dict) -> str:
     return result
 
 
-def convert_value(value: Any) -> Any:  
+def convert_value(value: Any) -> Any:
     return JSON_VALUE_CONVERTER.get(value) or value
 
 
