@@ -1,6 +1,9 @@
 install: # Install project
 	poetry install
 
+update: # Update dependencies
+	poetry update
+
 gendiff: # Run script "gendiff"
 	poetry run gendiff
 
