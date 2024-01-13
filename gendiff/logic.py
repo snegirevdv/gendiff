@@ -1,4 +1,3 @@
-import argparse
 import json
 from typing import Any
 
@@ -16,9 +15,15 @@ LINE_PREFIX_VALUES = {
 
 
 def generate_diff(file1: str, file2: str) -> str:
-    with open(file1) as file1, open(file2) as file2:
-        json1: dict = json.load(file1)
-        json2: dict = json.load(file2)
+    try:
+        with open(file1) as file1, open(file2) as file2:
+            try:
+                json1: dict = json.load(file1)
+                json2: dict = json.load(file2)
+            except json.JSONDecodeError:
+                raise ValueError("ERROR: Files contain invalid data")
+    except FileNotFoundError:
+        raise FileNotFoundError("ERROR: File Not Found")
     merged_jsons = merge_dicts_and_convert_values(json1, json2)
     return get_diff_report(merged_jsons)
 
@@ -54,19 +59,3 @@ def get_diff_report(data: dict) -> str:
 
 def convert_value(value: Any) -> Any:
     return JSON_VALUE_CONVERTER.get(value) or value
-
-
-def parse_arguments_from_command() -> argparse.Namespace():
-    parser = argparse.ArgumentParser(
-        description="Compares two configuration files and shows a difference."
-    )
-    parser.add_argument("first_file")
-    parser.add_argument("second_file")
-    parser.add_argument(
-        "-f", "--format",
-        metavar="FORMAT",
-        choices=["plain", "json"],
-        help="set format of output",
-        default="plain",
-    )
-    return parser.parse_args()
