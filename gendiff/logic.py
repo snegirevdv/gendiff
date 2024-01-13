@@ -33,20 +33,27 @@ def merge_dicts(
     dict2: dict[str, Any],
 ) -> dict[tuple, Any]:
     merged = {}
-    keys = set(dict1) | set(dict2)
 
-    for key in keys:
-        first_has_key = key in dict1
-        second_has_key = key in dict2
-        both_have_key = first_has_key and second_has_key
-        are_equal = dict1.get(key) == dict2.get(key)
+    keys_1 = set(dict1)
+    keys_2 = set(dict2)
 
-        if not first_has_key or both_have_key and not are_equal:
-            merged[(key, 1)] = convert_value(dict2[key])
-        if not second_has_key or both_have_key and not are_equal:
-            merged[(key, -1)] = convert_value(dict1[key])
-        if both_have_key and are_equal:
-            merged[(key, 0)] = convert_value(dict1[key])
+    unchanged_keys = set(
+        filter(lambda key: dict1[key] == dict2[key], keys_1 & keys_2)
+    )
+    changed_keys = set(
+        filter(lambda key: dict1[key] != dict2[key], keys_1 & keys_2)
+    )
+    deleted_keys = keys_1 - keys_2
+    added_keys = keys_2 - keys_1
+
+    for key in unchanged_keys:
+        merged[(key, 0)] = convert_value(dict1[key])
+
+    for key in deleted_keys | changed_keys:
+        merged[(key, -1)] = convert_value(dict1[key])
+
+    for key in added_keys | changed_keys:
+        merged[(key, 1)] = convert_value(dict2[key])
 
     return merged
 
