@@ -1,5 +1,6 @@
-import pytest
 import os
+
+import pytest
 
 FIXTURES_PATH = "tests/fixtures/"
 

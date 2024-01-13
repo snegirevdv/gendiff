@@ -1,4 +1,4 @@
-from gendiff import generate_diff
+import gendiff
 import pytest
 
 
@@ -17,18 +17,18 @@ def test_plain(get_answer, get_fixture_path, answer, file1, file2):
 
     answer = get_answer(answer_path)
 
-    assert generate_diff(file1, file2) == answer
+    assert gendiff.generate_diff(file1, file2) == answer
 
 
 def test_not_found_error(get_fixture_path):
     file1 = get_fixture_path("jsons/plain1.json")
     file2 = get_fixture_path("jsons/plain2.jsn")
     with pytest.raises(FileNotFoundError):
-        generate_diff(file1, file2)
+        gendiff.generate_diff(file1, file2)
 
 
 def test_json_error(get_fixture_path):
     file1 = get_fixture_path("jsons/plain1.json")
     file2 = get_fixture_path("jsons/invalid.json")
     with pytest.raises(ValueError):
-        generate_diff(file1, file2)
+        gendiff.generate_diff(file1, file2)
