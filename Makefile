@@ -23,4 +23,4 @@ lint: # Run flake8
 	poetry run flake8
 
 test: # Run pytest
-	poetry run pytest
+	poetry run coverage run -m pytest
