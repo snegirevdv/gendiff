@@ -24,27 +24,35 @@ def generate_diff(file1: str, file2: str) -> str:
                 raise ValueError("ERROR: Files contain invalid data")
     except FileNotFoundError:
         raise FileNotFoundError("ERROR: File Not Found")
-    merged_jsons = merge_dicts_and_convert_values(json1, json2)
+    merged_jsons = merge_dicts(json1, json2)
     return get_diff_report(merged_jsons)
 
 
-def merge_dicts_and_convert_values(
-    dict1: dict,
-    dict2: dict
+def merge_dicts(
+    dict1: dict[str, Any],
+    dict2: dict[str, Any],
 ) -> dict[tuple, Any]:
+    merged = {}
     keys = set(dict1) | set(dict2)
-    result = {}
+
     for key in keys:
-        if key not in dict1:
-            result[(key, 1)] = convert_value(dict2[key])
-        elif key not in dict2:
-            result[(key, -1)] = convert_value(dict1[key])
-        elif dict1[key] == dict2[key]:
-            result[(key, 0)] = convert_value(dict1[key])
-        else:
-            result[(key, -1)] = convert_value(dict1[key])
-            result[(key, 1)] = convert_value(dict2[key])
-    return result
+        first_has_key = key in dict1
+        second_has_key = key in dict2
+        both_have_key = first_has_key and second_has_key
+        are_equal = dict1.get(key) == dict2.get(key)
+
+        if not first_has_key or both_have_key and not are_equal:
+            merged[(key, 1)] = convert_value(dict2[key])
+        if not second_has_key or both_have_key and not are_equal:
+            merged[(key, -1)] = convert_value(dict1[key])
+        if both_have_key and are_equal:
+            merged[(key, 0)] = convert_value(dict1[key])
+
+    return merged
+
+
+def convert_value(value: Any) -> Any:
+    return JSON_VALUE_CONVERTER.get(value) or value
 
 
 def get_diff_report(data: dict) -> str:
@@ -55,7 +63,3 @@ def get_diff_report(data: dict) -> str:
         result += line
     result += "}"
     return result
-
-
-def convert_value(value: Any) -> Any:
-    return JSON_VALUE_CONVERTER.get(value) or value
