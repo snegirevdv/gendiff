@@ -26,5 +26,5 @@ test: # Run pytest
 	poetry run pytest
 
 coverage: # Run coverage
-	poetry run coverage -m pytest
+	poetry run coverage run -m pytest
 	poetry run coverage xml
