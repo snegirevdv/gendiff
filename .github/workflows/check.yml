@@ -15,11 +15,9 @@ jobs:
         run: make install
       - name: Run linter
         run: make lint
-      - name: Run tests
-        run: make test
-      - name: Run coverage
+      - name: Run tests & coverage
         uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: bcd31579e794e37d2c6ff23f7af343dd8132ce1afd6a919bdd04d4baf6e70f5a
         with:
-          coverageCommand: poetry run coverage report
+          coverageCommand: make coverage
