@@ -10,11 +10,13 @@ packages = [{ include = "gendiff" }, ]
 python = "^3.10"
 argparse = "^1.4.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 flake8 = "^7.0.0"
 pep8-naming = "^0.13.3"
 flake8-return = "^1.2.0"
 flake8-isort = "^6.1.1"
+pytest = "^7.4.4"
+pytest-cov = "^4.1.0"
 
 [tool.poetry.scripts]
 gendiff = "gendiff.scripts.gendiff:main"
