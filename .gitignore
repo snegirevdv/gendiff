@@ -5,5 +5,4 @@ dist/
 .coverage
 coverage.xml
 .pytest_cache/
-*.json
 htmlcov/

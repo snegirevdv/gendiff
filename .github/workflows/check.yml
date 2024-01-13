@@ -1,4 +1,4 @@
-name: Run tests and linter
+name: pytest&flake8
 
 on:
   - push
