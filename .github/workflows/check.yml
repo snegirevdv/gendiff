@@ -21,4 +21,5 @@ jobs:
         env:
           CC_TEST_REPORTER_ID: bcd31579e794e37d2c6ff23f7af343dd8132ce1afd6a919bdd04d4baf6e70f5a
         with:
-          coverageCommand: poetry run coverage run -m pytest
+          coverageCommand: 'poetry run coverage xml -o coverage.xml'
+          coverageLocations: 'coverage.xml:lcov'
