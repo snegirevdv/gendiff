@@ -5,7 +5,7 @@ import argparse
 import gendiff
 
 
-def parse_arguments() -> argparse.Namespace:
+def parse_arguments_from_command() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Compares two configuration files and shows a difference."
     )
@@ -22,7 +22,7 @@ def parse_arguments() -> argparse.Namespace:
 
 
 def main() -> None:
-    args = parse_arguments()
+    args = parse_arguments_from_command()
     return gendiff.generate_diff(args.first_file, args.second_file)
 
 
