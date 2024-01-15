@@ -10,32 +10,39 @@ from gendiff.constants import (
 
 
 def stylish(diff: dict[str, str], dict1: dict, dict2: dict, step=0):
-    report = "{\n"
-
-    for key, value in sorted(diff.items()):
+    def get_block(items):
+        key, value = items
         if isinstance(value, dict):
-            report += stylish_get_left(step, key)
-            report += stylish(value, dict1[key], dict2[key], step + 1)
+            left = stylish_get_left(key, step)
+            right = stylish(value, dict1[key], dict2[key], step + 1)
+            return left + right
 
-        elif value == UNCHANGED:
-            report += stylish_get_left(step, key)
-            report += stylish_get_right(key, dict2, step + 1)
+        if value == UNCHANGED:
+            left = stylish_get_left(key, step)
+            right = stylish_get_right(key, dict2, step + 1)
+            return left + right
 
-        else:
-            if value in (DELETED, CHANGED):
-                report += stylish_get_left(step, key, DELETED)
-                report += stylish_get_right(key, dict1, step + 1)
-            if value in (ADDED, CHANGED):
-                report += stylish_get_left(step, key, ADDED)
-                report += stylish_get_right(key, dict2, step + 1)
+        result = ""
 
+        if value in (DELETED, CHANGED):
+            result += stylish_get_left(key, step, status=DELETED)
+            result += stylish_get_right(key, dict1, step + 1)
+
+        if value in (ADDED, CHANGED):
+            result += stylish_get_left(key, step, status=ADDED)
+            result += stylish_get_right(key, dict2, step + 1)
+
+        return result
+
+    report = "{\n" + ''.join(map(get_block, sorted(diff.items())))
     report += stylish_get_indent(step) + "}" + "\n" * bool(step)
+
     return report
 
 
-def stylish_get_left(step, key, status=UNCHANGED, subdict=False):
+def stylish_get_left(key, step, status=UNCHANGED, subdict=False):
     if subdict:
-        return f"{stylish_get_indent(step + 1)}{key}: "
+        return f"{stylish_get_indent(step)}{key}: "
     return f"{stylish_get_indent(step)}  {PREFIXES[status]} {key}: "
 
 
@@ -43,7 +50,7 @@ def stylish_get_right(key, dictionary: dict, step):
     if isinstance(dictionary[key], dict):
         result = "{\n"
         for sub_key in dictionary[key]:
-            result += stylish_get_left(step, sub_key, subdict=False)
+            result += stylish_get_left(sub_key, step + 1, subdict=True)
             result += stylish_get_right(sub_key, dictionary[key], step + 1)
         result += stylish_get_indent(step) + "}\n"
         return result
