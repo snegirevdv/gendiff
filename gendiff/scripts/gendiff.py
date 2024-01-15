@@ -24,9 +24,9 @@ def parse_arguments_from_command() -> argparse.Namespace:
 
 def parse_formatter(report_format):
     match report_format:
-        case "stylish": return format.stylish
         case "plain": return format.plain
         case "json": return format.json
+    return format.stylish
 
 
 def main() -> None:
