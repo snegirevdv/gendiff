@@ -67,7 +67,8 @@ def get_dict_view(dictionary, indent):
 
 def get_line_or_dict(prefix, key, value, indent):
     if isinstance(value, dict):
-        return f"{get_indent(indent)}  {prefix} {key}: " + get_dict_view(value, indent)
+        left = f"{get_indent(indent)}  {prefix} {key}: "
+        return left + get_dict_view(value, indent)
     return get_line_view(prefix, key, value, indent)
 
 
@@ -78,14 +79,18 @@ def get_lines(key, difference, dict1: dict, dict2: dict, indent):
 
     if difference in (DELETED, UNCHANGED):
         return get_line_or_dict(prefix, key, value1, indent)
+
     if difference == ADDED:
         return get_line_or_dict(prefix, key, value2, indent)
+
     if isinstance(value1, dict) and isinstance(value2, dict):
         new_diff = get_diff(value1, value2)
-        return f"{get_indent(indent)}    {key}: " + get_diff_report(new_diff, value1, value2, indent + 1)
-    return get_line_or_dict(
-        PREFIXES[DELETED], key, value1, indent) + get_line_or_dict(
-            PREFIXES[ADDED], key, value2, indent)
+        left = f"{get_indent(indent)}    {key}: "
+        return left + get_diff_report(new_diff, value1, value2, indent + 1)
+
+    deleted = get_line_or_dict(PREFIXES[DELETED], key, value1, indent)
+    added = get_line_or_dict(PREFIXES[ADDED], key, value2, indent)
+    return deleted + added
 
 
 def get_indent(indent):
