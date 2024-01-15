@@ -16,6 +16,11 @@ import pytest
             "json/recursive1.json",
             "json/recursive2.json",
         ],
+        [
+            "answers/recursive.txt",
+            "yaml/recursive1.yml",
+            "yaml/recursive2.yml",
+        ],
     ]
 )
 def test_plain(get_answer, get_fixture_path, answer, file1, file2):
