@@ -1,8 +1,10 @@
+# Diff statuses
 DELETED = "deleted"
 UNCHANGED = "unchanged"
 ADDED = "added"
 CHANGED = "changed"
 
+# Stylish settings
 INDENT_SIZE = 4
 INDENT_SYMBOL = " "
 
@@ -12,6 +14,7 @@ PREFIXES = {
     ADDED: "+",
 }
 
+# Parser settings
 VALUE_CONVERTER = {
     True: "true",
     False: "false",
