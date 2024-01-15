@@ -3,23 +3,7 @@ from collections.abc import Callable, Hashable
 from typing import Any
 
 import yaml
-
-VALUE_CONVERTER = {
-    True: "true",
-    False: "false",
-    None: "null",
-}
-
-ERRORS = {
-    "extension": "ERROR: Files have incorrect extension",
-    "not_found": "ERROR: File Not Found",
-    "invalid": "ERROR: Files contain invalid data",
-}
-
-FORMATS = {
-    "JSON": "json",
-    "YAML": ("yaml", "yml"),
-}
+from gendiff.constants import ERRORS, FORMATS, VALUE_CONVERTER
 
 
 def parse_data(file1: str, file2: str) -> Callable:
@@ -64,4 +48,4 @@ def update_values(dictionary: dict[Hashable, Any]):
 
 
 def convert_value(value: Any):
-    return VALUE_CONVERTER.get(value, value)
+    return VALUE_CONVERTER.get(value, str(value))
