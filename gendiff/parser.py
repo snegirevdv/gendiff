@@ -57,8 +57,11 @@ def parse_yaml(filename) -> dict[Hashable, Any]:
 
 def update_values(dictionary: dict[Hashable, Any]):
     for key, value in dictionary.items():
-        dictionary[key] = convert_value(value)
+        if isinstance(value, dict):
+            update_values(value)
+        else:
+            dictionary[key] = convert_value(value)
 
 
 def convert_value(value: Any):
-    return VALUE_CONVERTER.get(value) or value
+    return VALUE_CONVERTER.get(value, value)
