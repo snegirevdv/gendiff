@@ -59,3 +59,11 @@ def stylish_get_right(key, dictionary: dict, step):
 
 def stylish_get_indent(step):
     return f"{INDENT_SYMBOL * step * INDENT_SIZE}"
+
+
+def plain():
+    ...
+
+
+def json():
+    ...

@@ -4,11 +4,8 @@ from gendiff import format, parser
 from gendiff.constants import ADDED, CHANGED, DELETED, UNCHANGED
 
 
-def generate_diff(
-    file1: str,
-    file2: str,
-    formatter: Callable = format.stylish
-) -> str:
+def generate_diff(file1: str, file2: str,
+                  formatter: Callable = format.stylish) -> str:
     data = parser.parse_data(file1, file2)
     diff = get_diff(*data)
     return formatter(diff, *data)

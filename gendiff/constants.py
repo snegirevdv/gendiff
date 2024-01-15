@@ -1,3 +1,8 @@
+# Formats
+STYLISH = "stylish"
+PLAIN = "plain"
+JSON = "json"
+
 # Diff statuses
 DELETED = "deleted"
 UNCHANGED = "unchanged"
