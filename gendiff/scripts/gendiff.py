@@ -3,7 +3,7 @@
 import argparse
 
 import gendiff
-from gendiff import format
+from gendiff.format import json, plain, stylish
 
 
 def parse_arguments_from_command() -> argparse.Namespace:
@@ -24,9 +24,9 @@ def parse_arguments_from_command() -> argparse.Namespace:
 
 def parse_formatter(report_format):
     match report_format:
-        case "plain": return format.plain
-        case "json": return format.json
-    return format.stylish
+        case "plain": return plain.get_view
+        case "json": return json.get_view
+    return stylish.get_view
 
 
 def main() -> None:
