@@ -8,7 +8,7 @@ from gendiff.constants import ADDED, CHANGED, DELETED, UNCHANGED
 def generate_diff(file1: str, file2: str,
                   formatter: Callable = stylish) -> str:
     """
-    Generate a diff between two files.
+    Generate a textual diff report between two files.
 
     Args:
         file1: Path to the first file to compare.
