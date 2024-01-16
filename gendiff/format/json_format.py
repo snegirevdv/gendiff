@@ -2,6 +2,7 @@ import json
 from typing import Any
 
 from gendiff.constants import CHANGED, DELETED
+from gendiff.format.constants import AFTER, BEFORE, STATUS, VALUE
 
 
 def json_format(
@@ -9,8 +10,8 @@ def json_format(
     dict1: dict[str, Any],
     dict2: dict[str, Any],
 ) -> str:
-    merged = merge_dicts(diff, dict1, dict2)
-    return json.dumps(merged, indent=3)
+    merged_data = merge_dicts(diff, dict1, dict2)
+    return json.dumps(merged_data, indent=3)
 
 
 def merge_dicts(
@@ -18,13 +19,13 @@ def merge_dicts(
     dict1: dict[str, Any],
     dict2: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
-    merged = {}
+    merged_data = {}
 
     for key, status in sorted(diff.items()):
         value1, value2 = dict1.get(key), dict2.get(key)
-        merged[key] = get_merged_value(status, value1, value2)
+        merged_data[key] = get_merged_value(status, value1, value2)
 
-    return merged
+    return merged_data
 
 
 def get_merged_value(
@@ -36,9 +37,9 @@ def get_merged_value(
         return merge_dicts(diff=status, dict1=value1, dict2=value2)
 
     if status == CHANGED:
-        return {"status": "changed", "before": value1, "after": value2}
+        return {STATUS: CHANGED, BEFORE: value1, AFTER: value2}
 
     if status == DELETED:
-        return {"status": status, "value": value1}
+        return {STATUS: status, VALUE: value1}
 
-    return {"status": status, "value": value2}
+    return {STATUS: status, VALUE: value2}

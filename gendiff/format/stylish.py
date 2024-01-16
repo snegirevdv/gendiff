@@ -2,9 +2,11 @@ from typing import Any
 
 from gendiff.constants import ADDED, CHANGED, DELETED, UNCHANGED
 from gendiff.format.constants import (
+    FINISH_LINE,
     INDENT_SIZE,
     INDENT_SYMBOL,
     PREFIXES,
+    START_LINE,
     VALUE_CONVERTOR,
 )
 
@@ -15,14 +17,17 @@ def stylish(
     dict2: dict[str, Any],
     step: int = 0,
 ) -> str:
-    view = "{\n"
+    view = START_LINE
 
     for items in sorted(diff.items()):
         key, _ = items
         value1, value2 = dict1.get(key), dict2.get(key)
         view += get_block(items, value1, value2, step)
 
-    view += get_indent(step) + "}" + "\n" * bool(step)
+    view += get_indent(step) + FINISH_LINE
+
+    if not step:
+        view = view.rstrip()
 
     return view
 
@@ -77,11 +82,11 @@ def get_left(
 
 def get_right(value: Any, step: int) -> str:
     if isinstance(value, dict):
-        result = "{\n"
+        result = START_LINE
         for sub_key in value:
             result += get_left(key=sub_key, step=step + 1, subdict=True)
             result += get_right(value=value[sub_key], step=step + 1)
-        result += get_indent(step) + "}\n"
+        result += get_indent(step) + FINISH_LINE
         return result
     return update_value(value) + "\n"
 

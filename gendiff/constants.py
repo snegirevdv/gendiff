@@ -3,26 +3,17 @@ STYLISH = "stylish"
 PLAIN = "plain"
 JSON = "json"
 
+# File formats
+YAML_FORMATS = ("yaml", "yml")
+JSON_FORMATS = "json"
+
 # Diff statuses
 DELETED = "deleted"
 UNCHANGED = "unchanged"
 ADDED = "added"
 CHANGED = "changed"
 
-# Parser settings
-VALUE_CONVERTER = {
-    True: "true",
-    False: "false",
-    None: "null",
-}
-
-ERRORS = {
-    "extension": "ERROR: Files have incorrect extension",
-    "not_found": "ERROR: File Not Found",
-    "invalid": "ERROR: Files contain invalid data",
-}
-
-FORMATS = {
-    "JSON": "json",
-    "YAML": ("yaml", "yml"),
-}
+# Parser error messages
+EXTENSION_ERROR = "ERROR: Files have incorrect extension"
+NOT_FOUND_ERROR = "ERROR: File Not Found"
+INVALID_ERROR = "ERROR: Files contain invalid data"
