@@ -26,13 +26,7 @@ COMPLEX = "[complex value]"
 DELIMETER = "."
 
 MESSAGES = {
-    ADDED: "was added with value: {after}",
+    ADDED: "was added with value: {value}",
     DELETED: "was removed",
     CHANGED: "was updated. From {before} to {after}",
 }
-
-# JSON
-STATUS = "status"
-BEFORE = "before"
-AFTER = "after"
-VALUE = "value"

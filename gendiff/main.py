@@ -1,8 +1,18 @@
-from collections.abc import Callable
+from collections.abc import Callable, Hashable
 from typing import Any
 
 from gendiff import parser, stylish
-from gendiff.constants import ADDED, CHANGED, DELETED, UNCHANGED
+from gendiff.constants import (
+    ADDED,
+    AFTER,
+    BEFORE,
+    CHANGED,
+    DELETED,
+    NESTED,
+    STATUS,
+    UNCHANGED,
+    VALUE,
+)
 
 
 def generate_diff(file1: str, file2: str,
@@ -25,37 +35,65 @@ def generate_diff(file1: str, file2: str,
 
     """
     data = parser.parse_data_from_files(file1, file2)
-    diff = get_diff(*data)
-    return formatter(diff, *data)
+    diff = create_diff(*data)
+    return formatter(diff)
 
 
-def get_diff(dict1: dict[str, Any], dict2: dict[str, Any]) -> dict[str, Any]:
-    """
-    Generates a diff between two dictionaries.
+def create_diff(
+    dict1: dict[str, Any],
+    dict2: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
 
-    The returned dictionary structure:
-        Keys: Union of keys from both dictionaries.
-        Values: Status of the diff for each key.
-                Options: unchanged, changed, deleted, added.
-                For nested dictionaries, the values are diff dictionaries.
-    """
-    def have_equal_values(key):
-        return dict1[key] == dict2[key]
+    diff = {}
+    keys = set(dict1).union(dict2)
 
-    keys_1 = set(dict1)
-    keys_2 = set(dict2)
-    common_keys = keys_1.intersection(keys_2)
+    for key in keys:
+        diff[key] = create_item(key, dict1, dict2)
 
-    unchanged = dict.fromkeys(filter(have_equal_values, common_keys), UNCHANGED)
-    changed = dict.fromkeys(common_keys.difference(unchanged), CHANGED)
-    deleted = dict.fromkeys(keys_1.difference(keys_2), DELETED)
-    added = dict.fromkeys(keys_2.difference(keys_1), ADDED)
+    diff = get_sorted_dict(diff)
 
-    for key in changed:
-        value1, value2 = dict1[key], dict2[key]
-        if isinstance(value1, dict) and isinstance(value2, dict):
-            changed[key] = get_diff(value1, value2)
+    return diff
 
-    diff = dict(**unchanged, **changed, **deleted, **added)
 
-    return dict(sorted(diff.items()))
+def create_item(
+    key: dict[str, Any] | str,
+    dict1: dict[str, Any],
+    dict2: dict[str, Any],
+) -> dict[str, Any]:
+    status = get_status(key, dict1, dict2)
+
+    if status == NESTED:
+        return {
+            STATUS: NESTED,
+            VALUE: create_diff(dict1=dict1[key], dict2=dict2[key]),
+        }
+
+    if status == CHANGED:
+        return {STATUS: CHANGED, BEFORE: dict1[key], AFTER: dict2[key]}
+
+    if status == ADDED:
+        return {STATUS: status, VALUE: dict2[key]}
+
+    return {STATUS: status, VALUE: dict1[key]}
+
+
+def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
+    if key not in dict1:
+        return ADDED
+
+    if key not in dict2:
+        return DELETED
+
+    value1, value2 = dict1[key], dict2[key]
+
+    if dict1[key] == dict2[key]:
+        return UNCHANGED
+
+    if isinstance(value1, dict) and isinstance(value2, dict):
+        return NESTED
+
+    return CHANGED
+
+
+def get_sorted_dict(dictionary: dict[Hashable, Any]) -> dict[Hashable, Any]:
+    return dict(sorted(dictionary.items()))

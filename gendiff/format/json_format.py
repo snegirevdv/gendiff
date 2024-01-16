@@ -1,15 +1,10 @@
 import json
 from typing import Any
 
-from gendiff.constants import CHANGED, DELETED
-from gendiff.format.constants import AFTER, BEFORE, STATUS, VALUE
+from gendiff.constants import NESTED, STATUS, VALUE
 
 
-def json_format(
-    diff: dict[str, str | dict[str, Any]],
-    dict1: dict[str, Any],
-    dict2: dict[str, Any],
-) -> str:
+def json_format(diff: dict[str, dict[str, Any]]) -> str:
     """
     Format the diff in a standard JSON style.
 
@@ -20,36 +15,16 @@ def json_format(
     Returns:
         Formatted diff view.
     """
-    merged_data = merge_dicts(diff, dict1, dict2)
-    return json.dumps(merged_data, indent=3)
+    pure_diff = get_pure_diff(diff)
+    return json.dumps(pure_diff, indent=3)
 
 
-def merge_dicts(
-    diff: dict[str, str],
-    dict1: dict[str, Any],
-    dict2: dict[str, Any],
-) -> dict[str, dict[str, Any]]:
-    merged_data = {}
+def get_pure_diff(diff: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    new_diff = {}
+    for key, item in diff.items():
+        if item[STATUS] == NESTED:
+            new_diff[key] = get_pure_diff(item[VALUE])
+        else:
+            new_diff[key] = diff[key]
 
-    for key, status in sorted(diff.items()):
-        value1, value2 = dict1.get(key), dict2.get(key)
-        merged_data[key] = get_merged_value(status, value1, value2)
-
-    return merged_data
-
-
-def get_merged_value(
-    status: dict[str, Any] | str,
-    value1: Any,
-    value2: Any,
-) -> dict[str, Any]:
-    if isinstance(status, dict):
-        return merge_dicts(diff=status, dict1=value1, dict2=value2)
-
-    if status == CHANGED:
-        return {STATUS: CHANGED, BEFORE: value1, AFTER: value2}
-
-    if status == DELETED:
-        return {STATUS: status, VALUE: value1}
-
-    return {STATUS: status, VALUE: value2}
+    return new_diff

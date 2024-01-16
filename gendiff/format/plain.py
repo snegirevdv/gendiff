@@ -1,6 +1,6 @@
 from typing import Any
 
-from gendiff.constants import UNCHANGED
+from gendiff.constants import AFTER, BEFORE, NESTED, STATUS, UNCHANGED, VALUE
 from gendiff.format.constants import (
     COMPLEX,
     DELIMETER,
@@ -10,7 +10,7 @@ from gendiff.format.constants import (
 )
 
 
-def plain(diff: dict, dict1: dict, dict2: dict, prefix: str = "") -> str:
+def plain(diff: dict, prefix: str = "") -> str:
     """
     Format the diff as a textual changes report.
 
@@ -24,11 +24,11 @@ def plain(diff: dict, dict1: dict, dict2: dict, prefix: str = "") -> str:
     """
     view = ""
 
-    for items in sorted(diff.items()):
-        key, status = items
-        value1, value2 = dict1.get(key), dict2.get(key)
+    for key, item in diff.items():
+        status = item[STATUS]
+
         if status != UNCHANGED:
-            view += get_line(items, value1, value2, prefix)
+            view += get_line(key, item, status, prefix)
 
     if not prefix:
         view = view.rstrip()
@@ -36,17 +36,18 @@ def plain(diff: dict, dict1: dict, dict2: dict, prefix: str = "") -> str:
     return view
 
 
-def get_line(items: tuple, value1: Any, value2: Any, prefix: str) -> str:
-    key, status = items
-
-    if isinstance(value1, dict) and isinstance(value2, dict):
+def get_line(key: str, item: dict[str, Any], status: str, prefix: str) -> str:
+    if status == NESTED:
         new_prefix = prefix + key + DELIMETER
-        return plain(diff=status, dict1=value1, dict2=value2, prefix=new_prefix)
+        return plain(diff=item[VALUE], prefix=new_prefix)
 
-    value1 = update_value(value1)
-    value2 = update_value(value2)
+    value, before, after = item.get(VALUE), item.get(BEFORE), item.get(AFTER)
 
-    message = MESSAGES[status].format(before=value1, after=value2)
+    value = update_value(value)
+    before = update_value(before)
+    after = update_value(after)
+
+    message = MESSAGES[status].format(before=before, after=after, value=value)
 
     return f"{PROPERTY} '{prefix}{key}' {message}\n"
 
