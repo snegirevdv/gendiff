@@ -3,7 +3,8 @@
 import argparse
 
 import gendiff
-from gendiff.format import json_format, plain, stylish
+from gendiff import json_format, plain, stylish
+from gendiff.constants import JSON, PLAIN, STYLISH
 
 
 def parse_arguments_from_command() -> argparse.Namespace:
@@ -15,18 +16,18 @@ def parse_arguments_from_command() -> argparse.Namespace:
     parser.add_argument(
         "-f", "--format",
         metavar="FORMAT",
-        choices=["plain", "json", "stylish"],
+        choices=[PLAIN, JSON, STYLISH],
         help="set format of output",
-        default="stylish",
+        default=STYLISH,
     )
     return parser.parse_args()
 
 
 def parse_formatter(report_format):
     match report_format:
-        case "plain": return plain.plain
-        case "json": return json_format.json_format
-    return stylish.stylish
+        case "plain": return plain
+        case "json": return json_format
+    return stylish
 
 
 def main() -> None:
