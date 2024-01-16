@@ -8,7 +8,7 @@ from gendiff.constants import (
     INVALID_ERROR,
     JSON_FORMATS,
     NOT_FOUND_ERROR,
-    YAML_FORMATS
+    YAML_FORMATS,
 )
 
 
