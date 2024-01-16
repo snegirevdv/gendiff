@@ -1,19 +1,44 @@
 from collections.abc import Callable
 from typing import Any
 
-from gendiff import parser
+from gendiff import parser, stylish
 from gendiff.constants import ADDED, CHANGED, DELETED, UNCHANGED
-from gendiff.format import stylish
 
 
 def generate_diff(file1: str, file2: str,
-                  formatter: Callable = stylish.stylish) -> str:
-    data = parser.parse_data(file1, file2)
+                  formatter: Callable = stylish) -> str:
+    """
+    Generate a diff between two files.
+
+    Args:
+        file1: Path to the first file to compare.
+        file2: Path to the second file to compare.
+        formatter (optional): Function to format the diff output.
+
+    Formatter Options:
+        stylish (default): JSON-like format, changes marked by "+" and "-".
+        plain: textual report of changes, shows property updates.
+        json_format: standard JSON format representation.
+
+    Returns:
+        Formatted diff string representing the differences.
+
+    """
+    data = parser.parse_data_from_files(file1, file2)
     diff = get_diff(*data)
     return formatter(diff, *data)
 
 
 def get_diff(dict1: dict[str, Any], dict2: dict[str, Any]) -> dict[str, Any]:
+    """
+    Generates a diff between two dictionaries.
+
+    The returned dictionary structure:
+        Keys: Union of keys from both dictionaries.
+        Values: Status of the diff for each key.
+                Options: unchanged, changed, deleted, added.
+                For nested dictionaries, the values are diff dictionaries.
+    """
     def have_equal_values(key):
         return dict1[key] == dict2[key]
 

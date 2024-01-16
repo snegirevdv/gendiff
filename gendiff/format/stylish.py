@@ -17,6 +17,17 @@ def stylish(
     dict2: dict[str, Any],
     step: int = 0,
 ) -> str:
+    """
+    Format the diff in a JSON-like style with marked changed strings.
+
+    Args:
+        diff: diff dictionary.
+        dict1, dict2: compared dictionaries.
+        step (optional): current indentation level. Default: 0.
+
+    Returns:
+        Formatted diff view.
+    """
     view = START_LINE
 
     for items in sorted(diff.items()):

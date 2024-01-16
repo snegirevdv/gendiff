@@ -12,18 +12,18 @@ from gendiff.constants import (
 )
 
 
-def parse_data(file1: str, file2: str) -> Callable:
+def parse_data_from_files(file1: str, file2: str) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         if file1.endswith(JSON_FORMATS) and file2.endswith(JSON_FORMATS):
-            return parse_json(file1), parse_json(file2)
+            return parse_json_from_file(file1), parse_json_from_file(file2)
         if file1.endswith(YAML_FORMATS) and file2.endswith(YAML_FORMATS):
-            return parse_yaml(file1), parse_yaml(file2)
+            return parse_yaml_from_file(file1), parse_yaml_from_file(file2)
         raise ValueError(EXTENSION_ERROR)
     except FileNotFoundError:
         raise FileNotFoundError(NOT_FOUND_ERROR)
 
 
-def parse_json(filename: str) -> dict[Hashable, Any]:
+def parse_json_from_file(filename: str) -> dict[str, Any]:
     with open(filename) as file:
         try:
             data = json.load(file)
@@ -32,7 +32,7 @@ def parse_json(filename: str) -> dict[Hashable, Any]:
             raise ValueError(INVALID_ERROR)
 
 
-def parse_yaml(filename) -> dict[Hashable, Any]:
+def parse_yaml_from_file(filename) -> dict[str, Any]:
     with open(filename) as file:
         try:
             data = yaml.safe_load(file)

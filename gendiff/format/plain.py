@@ -11,6 +11,17 @@ from gendiff.format.constants import (
 
 
 def plain(diff: dict, dict1: dict, dict2: dict, prefix: str = "") -> str:
+    """
+    Format the diff as a textual changes report.
+
+    Args:
+        diff: diff dictionary.
+        dict1, dict2: compared dictionaries.
+        prefix (optional): current prefix of the file name. Default: "".
+
+    Returns:
+        Formatted diff view.
+    """
     view = ""
 
     for items in sorted(diff.items()):

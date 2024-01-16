@@ -10,6 +10,16 @@ def json_format(
     dict1: dict[str, Any],
     dict2: dict[str, Any],
 ) -> str:
+    """
+    Format the diff in a standard JSON style.
+
+    Args:
+        diff: diff dictionary.
+        dict1, dict2: compared dictionaries.
+
+    Returns:
+        Formatted diff view.
+    """
     merged_data = merge_dicts(diff, dict1, dict2)
     return json.dumps(merged_data, indent=3)
 
