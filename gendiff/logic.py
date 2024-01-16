@@ -6,7 +6,7 @@ from gendiff.format import stylish
 
 
 def generate_diff(file1: str, file2: str,
-                  formatter: Callable = stylish.get_view) -> str:
+                  formatter: Callable = stylish.stylish) -> str:
     data = parser.parse_data(file1, file2)
     diff = get_diff(*data)
     return formatter(diff, *data)

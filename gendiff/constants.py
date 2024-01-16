@@ -1,4 +1,4 @@
-# Formats
+# Report formats
 STYLISH = "stylish"
 PLAIN = "plain"
 JSON = "json"
@@ -8,16 +8,6 @@ DELETED = "deleted"
 UNCHANGED = "unchanged"
 ADDED = "added"
 CHANGED = "changed"
-
-# Stylish settings
-INDENT_SIZE = 4
-INDENT_SYMBOL = " "
-
-PREFIXES = {
-    DELETED: "-",
-    UNCHANGED: " ",
-    ADDED: "+",
-}
 
 # Parser settings
 VALUE_CONVERTER = {

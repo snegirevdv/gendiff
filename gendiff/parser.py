@@ -3,7 +3,7 @@ from collections.abc import Callable, Hashable
 from typing import Any
 
 import yaml
-from gendiff.constants import ERRORS, FORMATS, VALUE_CONVERTER
+from gendiff.constants import ERRORS, FORMATS
 
 
 def parse_data(file1: str, file2: str) -> Callable:
@@ -21,7 +21,6 @@ def parse_json(filename: str) -> dict[Hashable, Any]:
     with open(filename) as file:
         try:
             data = json.load(file)
-            update_values(data)
             return data
         except json.JSONDecodeError:
             raise ValueError(ERRORS["invalid"])
@@ -32,20 +31,7 @@ def parse_yaml(filename) -> dict[Hashable, Any]:
         try:
             data = yaml.safe_load(file)
             if data is not None:
-                update_values(data)
                 return data
             return {}
         except (yaml.YAMLError, KeyError):
             raise ValueError(ERRORS["invalid"])
-
-
-def update_values(dictionary: dict[Hashable, Any]):
-    for key, value in dictionary.items():
-        if isinstance(value, dict):
-            update_values(value)
-        else:
-            dictionary[key] = convert_value(value)
-
-
-def convert_value(value: Any):
-    return VALUE_CONVERTER.get(value, str(value))
