@@ -85,12 +85,13 @@ def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
         DELETED: key not in dict2,
         UNCHANGED: value1 == value2,
         NESTED: isinstance(value1, dict) and isinstance(value2, dict),
-        CHANGED: True,
     }
 
     for status, condition in conditions.items():
         if condition:
             return status
+
+    return CHANGED
 
 
 def get_sorted_dict(dictionary: dict[Hashable, Any]) -> dict[Hashable, Any]:
