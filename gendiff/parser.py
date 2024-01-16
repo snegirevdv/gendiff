@@ -1,5 +1,4 @@
 import json
-from collections.abc import Callable, Hashable
 from typing import Any
 
 import yaml
@@ -12,7 +11,10 @@ from gendiff.constants import (
 )
 
 
-def parse_data_from_files(file1: str, file2: str) -> tuple[dict[str, Any], dict[str, Any]]:
+def parse_data_from_files(
+    file1: str,
+    file2: str
+) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         if file1.endswith(JSON_FORMATS) and file2.endswith(JSON_FORMATS):
             return parse_json_from_file(file1), parse_json_from_file(file2)
