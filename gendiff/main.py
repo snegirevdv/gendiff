@@ -80,21 +80,17 @@ def create_item(
 def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
     value1, value2 = dict1.get(key), dict2.get(key)
 
-    status = None
+    conditions = {
+        ADDED: key not in dict1,
+        DELETED: key not in dict2,
+        UNCHANGED: value1 == value2,
+        NESTED: isinstance(value1, dict) and isinstance(value2, dict),
+        CHANGED: True,
+    }
 
-    if key not in dict1:
-        status = ADDED
-
-    elif key not in dict2:
-        status = DELETED
-
-    elif value1 == value2:
-        status = UNCHANGED
-
-    elif isinstance(value1, dict) and isinstance(value2, dict):
-        status = NESTED
-
-    return status or CHANGED
+    for status, condition in conditions.items():
+        if condition:
+            return status
 
 
 def get_sorted_dict(dictionary: dict[Hashable, Any]) -> dict[Hashable, Any]:
