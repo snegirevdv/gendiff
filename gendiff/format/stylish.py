@@ -23,8 +23,8 @@ def get_view(
     diff = utils.get_sorted_diff(diff)
     view = fconst.START_LINE
 
-    for key, item in diff.items():
-        view += get_block(key, item, step)
+    for key, diff_entry in diff.items():
+        view += get_block(key, diff_entry, step)
 
     view += get_indent(step) + fconst.FINISH_LINE
 
@@ -34,24 +34,28 @@ def get_view(
     return view
 
 
-def get_block(key: str, item: list[Any] | dict[str, Any], step: int) -> str:
-    if isinstance(item, dict):
+def get_block(
+    key: str,
+    diff_entry: list[Any] | dict[str, Any],
+    step: int,
+) -> str:
+    if isinstance(diff_entry, dict):
         left = get_left(key, step)
-        right = get_view(diff=item, step=step + 1)
+        right = get_view(diff=diff_entry, step=step + 1)
         return left + right
 
-    status = item[0]
+    status = diff_entry[0]
 
     if status == const.CHANGED:
-        return get_changed_block(key, item[1:], step)
+        return get_changed_block(key, diff_entry[1:], step)
 
-    value = item[1]
+    diff_value = diff_entry[1]
 
-    return get_left(key, step, status) + get_right(value, step + 1)
+    return get_left(key, step, status) + get_right(diff_value, step + 1)
 
 
-def get_changed_block(key, item, step):
-    before, after = item
+def get_changed_block(key, diff_entry, step):
+    before, after = diff_entry
     first = get_left(key, step, const.DELETED) + get_right(before, step + 1)
     second = get_left(key, step, const.ADDED) + get_right(after, step + 1)
     return first + second
@@ -68,19 +72,19 @@ def get_left(
     return f"{get_indent(step)}  {fconst.PREFIXES[status]} {key}: "
 
 
-def get_right(value: Any, step: int) -> str:
-    if isinstance(value, dict):
+def get_right(diff_value: Any, step: int) -> str:
+    if isinstance(diff_value, dict):
         block = fconst.START_LINE
 
-        for sub_key in value:
+        for sub_key in diff_value:
             block += get_left(key=sub_key, step=step + 1, subdict=True)
-            block += get_right(value=value[sub_key], step=step + 1)
+            block += get_right(diff_value=diff_value[sub_key], step=step + 1)
 
         block += get_indent(step) + fconst.FINISH_LINE
 
         return block
 
-    return update_value(value) + "\n"
+    return update_value(diff_value) + "\n"
 
 
 def get_indent(step: int) -> str:

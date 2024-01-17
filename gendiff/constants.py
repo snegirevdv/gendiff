@@ -5,20 +5,13 @@ JSON = "json"
 
 # File formats
 YAML_FORMATS = ("yaml", "yml")
-JSON_FORMATS = "json"
+JSON_FORMATS = ("json",)
 
 # Diff statuses
 DELETED = "deleted"
 UNCHANGED = "unchanged"
 ADDED = "added"
 CHANGED = "changed"
-NESTED = "nested"
-
-# Diff keys
-STATUS = "status"
-VALUE = "value"
-BEFORE = "before"
-AFTER = "after"
 
 # Parser error messages
 EXTENSION_ERROR = "ERROR: Files have incorrect extension"

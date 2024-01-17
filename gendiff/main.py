@@ -39,7 +39,7 @@ def generate_diff(file1: str, file2: str, format: str = "stylish") -> str:
 def create_diff(
     dict1: dict[str, Any],
     dict2: dict[str, Any],
-) -> dict[str, dict[str:Any] | list[Any]]:
+) -> dict[str, dict[str, Any] | list[Any]]:
     """
     Create a diff dictionary representing the diff between two dictinaries.
 
@@ -65,9 +65,9 @@ def create_item(
     if status == const.CHANGED:
         return [status, dict1[key], dict2[key]]
 
-    value = dict1.get(key) if key in dict1 else dict2[key]
+    diff_value = dict1.get(key) if key in dict1 else dict2[key]
 
-    return [status, value]
+    return [status, diff_value]
 
 
 def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
@@ -85,7 +85,7 @@ def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
     return const.CHANGED
 
 
-def is_nested(key: str, dict1: dict[str:Any], dict2: dict[str:Any]) -> bool:
+def is_nested(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> bool:
     v1, v2 = dict1.get(key), dict2.get(key)
     return isinstance(v1, dict) and isinstance(v2, dict) and v1 != v2
 

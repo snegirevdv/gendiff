@@ -20,13 +20,13 @@ def get_view(diff: dict, prefix: str = "") -> str:
     diff = utils.get_sorted_diff(diff)
     view = ""
 
-    for key, item in diff.items():
-        if isinstance(item, dict):
+    for key, diff_entry in diff.items():
+        if isinstance(diff_entry, dict):
             new_prefix = prefix + key + fconst.DELIMETER
-            view += get_view(diff=item, prefix=new_prefix)
+            view += get_view(diff=diff_entry, prefix=new_prefix)
 
-        elif item[0] != const.UNCHANGED:
-            view += get_line(key, item, prefix)
+        elif diff_entry[0] != const.UNCHANGED:
+            view += get_line(key, diff_entry, prefix)
 
     if not prefix:
         view = view.rstrip()
@@ -34,9 +34,9 @@ def get_view(diff: dict, prefix: str = "") -> str:
     return view
 
 
-def get_line(key: str, item: dict[str, Any], prefix: str) -> str:
-    status = item[0]
-    values = tuple(map(update_value, item[1:]))
+def get_line(key: str, diff_entry: dict[str, Any], prefix: str) -> str:
+    status = diff_entry[0]
+    values = tuple(map(update_value, diff_entry[1:]))
 
     message = fconst.MESSAGES[status].format(values=values)
 
