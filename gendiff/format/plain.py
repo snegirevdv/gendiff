@@ -7,7 +7,7 @@ from gendiff.format import utils
 
 def get_view(diff: dict, prefix: str = "") -> str:
     """
-    Format the diff as a textual changes report.
+    Format the diff into a plain text report.
 
     Args:
         diff: diff dictionary.
@@ -46,4 +46,6 @@ def get_line(key: str, item: dict[str, Any], prefix: str) -> str:
 def update_value(value: Any) -> str:
     if isinstance(value, dict):
         return fconst.COMPLEX
-    return fconst.VALUE_CONVERTOR.get(value, f"'{value}'")
+    if value is None or isinstance(value, bool):
+        return fconst.VALUE_CONVERTOR[value]
+    return f"'{value}'"

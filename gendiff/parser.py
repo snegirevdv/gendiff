@@ -9,6 +9,14 @@ def parse_data_from_files(
     file1: str,
     file2: str
 ) -> tuple[dict[str, Any], dict[str, Any]]:
+    """
+    Parse data from two files and return their content as dictionaries.
+    Supports JSON and YAML file formats.
+
+    Raises:
+        FileNotFoundError: If either of the files does not exist.
+        ValueError: If file formats are not supported or contain invalid data.
+    """
     try:
         if (
             file1.endswith(const.JSON_FORMATS)

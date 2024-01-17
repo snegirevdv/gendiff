@@ -39,16 +39,24 @@ def generate_diff(file1: str, file2: str, format: str = "stylish") -> str:
 def create_diff(
     dict1: dict[str, Any],
     dict2: dict[str, Any],
-) -> dict[str, dict[str, Any]]:
+) -> dict[str, dict[str:Any] | list[Any]]:
+    """
+    Create a diff dictionary representing the diff between two dictinaries.
+
+    Returns:
+        Dictionary contains keys from both dicts.
+        Key's values contain lists dictionary describing the changes.
+        For nested dictionaries values contain recursive diff dictionaries.
+    """
     keys = set(dict1).union(dict2)
     return {key: create_item(key, dict1, dict2) for key in keys}
 
 
 def create_item(
-    key: dict[str, Any] | str,
+    key: str,
     dict1: dict[str, Any],
     dict2: dict[str, Any],
-) -> dict[str, Any]:
+) -> dict[str, Any] | list[Any]:
     if is_nested(key, dict1, dict2):
         return create_diff(dict1=dict1[key], dict2=dict2[key])
 

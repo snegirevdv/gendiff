@@ -10,11 +10,12 @@ def get_view(
     step: int = 0,
 ) -> str:
     """
-    Format the diff in a JSON-like style with marked changed strings.
+    Format the diff into a stylish, JSON-like style.
+    Changes marked by "+" (added) and "-" (deleted).
 
     Args:
-        diff: diff dictionary.
-        step (optional): current indentation level. Default: 0.
+        diff: the diff dictionary.
+        step (optional): the current indentation level. Default: 0.
 
     Returns:
         Formatted diff view.
@@ -87,4 +88,6 @@ def get_indent(step: int) -> str:
 
 
 def update_value(value: Any) -> str:
-    return fconst.VALUE_CONVERTOR.get(value, str(value))
+    if value is None or isinstance(value, bool):
+        return fconst.VALUE_CONVERTOR[value]
+    return str(value)

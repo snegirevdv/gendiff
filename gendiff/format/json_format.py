@@ -6,11 +6,10 @@ from gendiff.format import utils
 
 def get_view(diff: dict[str, dict[str, Any]]) -> str:
     """
-    Format the diff in a standard JSON style.
+    Format the diff dictionary into a standart JSON.
 
     Args:
         diff: diff dictionary.
-        dict1, dict2: compared dictionaries.
 
     Returns:
         Formatted diff view.
