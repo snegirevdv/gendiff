@@ -40,24 +40,20 @@ def get_block(
     step: int,
 ) -> str:
     if isinstance(diff_entry, dict):
-        left = get_left(key, step)
-        right = get_view(diff=diff_entry, step=step + 1)
-        return left + right
+        return get_left(key, step) + get_view(diff_entry, step + 1)
 
-    status = diff_entry[0]
+    status, *diff_values = diff_entry
 
     if status == const.CHANGED:
-        return get_changed_block(key, diff_entry[1:], step)
+        return get_changed_block(key, diff_values, step)
 
-    diff_value = diff_entry[1]
-
-    return get_left(key, step, status) + get_right(diff_value, step + 1)
+    return get_left(key, step, status) + get_right(*diff_values, step)
 
 
-def get_changed_block(key, diff_entry, step):
-    before, after = diff_entry
-    first = get_left(key, step, const.DELETED) + get_right(before, step + 1)
-    second = get_left(key, step, const.ADDED) + get_right(after, step + 1)
+def get_changed_block(key, diff_values, step):
+    before, after = diff_values
+    first = get_left(key, step, const.DELETED) + get_right(before, step)
+    second = get_left(key, step, const.ADDED) + get_right(after, step)
     return first + second
 
 
@@ -68,7 +64,7 @@ def get_left(
     subdict: bool = False,
 ) -> str:
     if subdict:
-        return f"{get_indent(step)}{key}: "
+        return f"{get_indent(step + 1)}{key}: "
     return f"{get_indent(step)}  {fconst.PREFIXES[status]} {key}: "
 
 
@@ -77,10 +73,10 @@ def get_right(diff_value: Any, step: int) -> str:
         block = fconst.START_LINE
 
         for sub_key in diff_value:
-            block += get_left(key=sub_key, step=step + 1, subdict=True)
-            block += get_right(diff_value=diff_value[sub_key], step=step + 1)
+            block += get_left(sub_key, step + 1, subdict=True)
+            block += get_right(diff_value[sub_key], step + 1)
 
-        block += get_indent(step) + fconst.FINISH_LINE
+        block += get_indent(step + 1) + fconst.FINISH_LINE
 
         return block
 
@@ -88,7 +84,7 @@ def get_right(diff_value: Any, step: int) -> str:
 
 
 def get_indent(step: int) -> str:
-    return f"{fconst.INDENT_SYMBOL * step * fconst.INDENT_SIZE}"
+    return f"{fconst.INDENT_SYMBOL * fconst.INDENT_SIZE * step}"
 
 
 def update_value(value: Any) -> str:
