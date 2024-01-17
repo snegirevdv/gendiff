@@ -25,4 +25,4 @@ def parse_arguments_from_command() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_arguments_from_command()
-    return gendiff.generate_diff(args.first_file, args.second_file, args.format)
+    print(gendiff.generate_diff(args.first_file, args.second_file, args.format))
