@@ -1,16 +1,11 @@
 from typing import Any
 
-from gendiff.constants import AFTER, BEFORE, NESTED, STATUS, UNCHANGED, VALUE
-from gendiff.format.constants import (
-    COMPLEX,
-    DELIMETER,
-    MESSAGES,
-    PROPERTY,
-    VALUE_CONVERTOR,
-)
+from gendiff import constants as const
+from gendiff.format import constants as fconst
+from gendiff.format import utils
 
 
-def plain(diff: dict, prefix: str = "") -> str:
+def get_view(diff: dict, prefix: str = "") -> str:
     """
     Format the diff as a textual changes report.
 
@@ -22,13 +17,16 @@ def plain(diff: dict, prefix: str = "") -> str:
     Returns:
         Formatted diff view.
     """
+    diff = utils.get_sorted_diff(diff)
     view = ""
 
     for key, item in diff.items():
-        status = item[STATUS]
+        if isinstance(item, dict):
+            new_prefix = prefix + key + fconst.DELIMETER
+            view += get_view(diff=item, prefix=new_prefix)
 
-        if status != UNCHANGED:
-            view += get_line(key, item, status, prefix)
+        elif item[0] != const.UNCHANGED:
+            view += get_line(key, item, prefix)
 
     if not prefix:
         view = view.rstrip()
@@ -36,23 +34,16 @@ def plain(diff: dict, prefix: str = "") -> str:
     return view
 
 
-def get_line(key: str, item: dict[str, Any], status: str, prefix: str) -> str:
-    if status == NESTED:
-        new_prefix = prefix + key + DELIMETER
-        return plain(diff=item[VALUE], prefix=new_prefix)
+def get_line(key: str, item: dict[str, Any], prefix: str) -> str:
+    status = item[0]
+    values = tuple(map(update_value, item[1:]))
 
-    value, before, after = item.get(VALUE), item.get(BEFORE), item.get(AFTER)
+    message = fconst.MESSAGES[status].format(values=values)
 
-    value = update_value(value)
-    before = update_value(before)
-    after = update_value(after)
-
-    message = MESSAGES[status].format(before=before, after=after, value=value)
-
-    return f"{PROPERTY} '{prefix}{key}' {message}\n"
+    return f"{fconst.PROPERTY} '{prefix}{key}' {message}\n"
 
 
 def update_value(value: Any) -> str:
     if isinstance(value, dict):
-        return COMPLEX
-    return VALUE_CONVERTOR.get(value, f"'{value}'")
+        return fconst.COMPLEX
+    return fconst.VALUE_CONVERTOR.get(value, f"'{value}'")

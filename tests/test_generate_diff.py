@@ -1,6 +1,6 @@
 import gendiff
 import pytest
-from gendiff.format import json_format, plain, stylish
+from gendiff import constants as const
 
 
 @pytest.mark.parametrize(
@@ -50,7 +50,7 @@ from gendiff.format import json_format, plain, stylish
 )
 def test_stylish(prepare_data, answer_path, file1_path, file2_path):
     answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
-    assert gendiff.generate_diff(file1, file2, stylish.stylish) == answer
+    assert gendiff.generate_diff(file1, file2, const.STYLISH) == answer
 
 
 @pytest.mark.parametrize(
@@ -100,7 +100,7 @@ def test_stylish(prepare_data, answer_path, file1_path, file2_path):
 )
 def test_plain(prepare_data, answer_path, file1_path, file2_path):
     answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
-    assert gendiff.generate_diff(file1, file2, plain.plain) == answer
+    assert gendiff.generate_diff(file1, file2, const.PLAIN) == answer
 
 
 @pytest.mark.parametrize(
@@ -150,7 +150,7 @@ def test_plain(prepare_data, answer_path, file1_path, file2_path):
 )
 def test_json(prepare_data, answer_path, file1_path, file2_path):
     answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
-    result = gendiff.generate_diff(file1, file2, json_format.json_format)
+    result = gendiff.generate_diff(file1, file2, const.JSON)
     assert result == answer
 
 

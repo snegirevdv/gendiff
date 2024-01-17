@@ -2,13 +2,7 @@ import json
 from typing import Any
 
 import yaml
-from gendiff.constants import (
-    EXTENSION_ERROR,
-    INVALID_ERROR,
-    JSON_FORMATS,
-    NOT_FOUND_ERROR,
-    YAML_FORMATS,
-)
+from gendiff import constants as const
 
 
 def parse_data_from_files(
@@ -16,13 +10,19 @@ def parse_data_from_files(
     file2: str
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
-        if file1.endswith(JSON_FORMATS) and file2.endswith(JSON_FORMATS):
+        if (
+            file1.endswith(const.JSON_FORMATS)
+            and file2.endswith(const.JSON_FORMATS)
+        ):
             return parse_json_from_file(file1), parse_json_from_file(file2)
-        if file1.endswith(YAML_FORMATS) and file2.endswith(YAML_FORMATS):
+        if (
+            file1.endswith(const.YAML_FORMATS)
+            and file2.endswith(const.YAML_FORMATS)
+        ):
             return parse_yaml_from_file(file1), parse_yaml_from_file(file2)
-        raise ValueError(EXTENSION_ERROR)
+        raise ValueError(const.EXTENSION_ERROR)
     except FileNotFoundError:
-        raise FileNotFoundError(NOT_FOUND_ERROR)
+        raise FileNotFoundError(const.NOT_FOUND_ERROR)
 
 
 def parse_json_from_file(filename: str) -> dict[str, Any]:
@@ -31,7 +31,7 @@ def parse_json_from_file(filename: str) -> dict[str, Any]:
             data = json.load(file)
             return data
         except json.JSONDecodeError:
-            raise ValueError(INVALID_ERROR)
+            raise ValueError(const.INVALID_ERROR)
 
 
 def parse_yaml_from_file(filename) -> dict[str, Any]:
@@ -42,4 +42,4 @@ def parse_yaml_from_file(filename) -> dict[str, Any]:
                 return data
             return {}
         except (yaml.YAMLError, KeyError):
-            raise ValueError(INVALID_ERROR)
+            raise ValueError(const.INVALID_ERROR)

@@ -1,22 +1,22 @@
 {
-   "follow": {
-      "status": "deleted",
-      "value": false
-   },
-   "host": {
-      "status": "deleted",
-      "value": "hexlet.io"
-   },
-   "nothing": {
-      "status": "deleted",
-      "value": null
-   },
-   "proxy": {
-      "status": "deleted",
-      "value": "123.234.53.22"
-   },
-   "timeout": {
-      "status": "deleted",
-      "value": 50
-   }
+   "follow": [
+      "deleted",
+      false
+   ],
+   "host": [
+      "deleted",
+      "hexlet.io"
+   ],
+   "nothing": [
+      "deleted",
+      null
+   ],
+   "proxy": [
+      "deleted",
+      "123.234.53.22"
+   ],
+   "timeout": [
+      "deleted",
+      50
+   ]
 }

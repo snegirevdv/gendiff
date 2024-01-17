@@ -1,80 +1,80 @@
 {
    "common": {
-      "follow": {
-         "status": "added",
-         "value": false
-      },
-      "setting1": {
-         "status": "unchanged",
-         "value": "Value 1"
-      },
-      "setting2": {
-         "status": "deleted",
-         "value": 200
-      },
-      "setting3": {
-         "status": "changed",
-         "before": true,
-         "after": null
-      },
-      "setting4": {
-         "status": "added",
-         "value": "blah blah"
-      },
-      "setting5": {
-         "status": "added",
-         "value": {
+      "follow": [
+         "added",
+         false
+      ],
+      "setting1": [
+         "unchanged",
+         "Value 1"
+      ],
+      "setting2": [
+         "deleted",
+         200
+      ],
+      "setting3": [
+         "changed",
+         true,
+         null
+      ],
+      "setting4": [
+         "added",
+         "blah blah"
+      ],
+      "setting5": [
+         "added",
+         {
             "key5": "value5"
          }
-      },
+      ],
       "setting6": {
          "doge": {
-            "wow": {
-               "status": "changed",
-               "before": "",
-               "after": "so much"
-            }
+            "wow": [
+               "changed",
+               "",
+               "so much"
+            ]
          },
-         "key": {
-            "status": "unchanged",
-            "value": "value"
-         },
-         "ops": {
-            "status": "added",
-            "value": "vops"
-         }
+         "key": [
+            "unchanged",
+            "value"
+         ],
+         "ops": [
+            "added",
+            "vops"
+         ]
       }
    },
    "group1": {
-      "baz": {
-         "status": "changed",
-         "before": "bas",
-         "after": "bars"
-      },
-      "foo": {
-         "status": "unchanged",
-         "value": "bar"
-      },
-      "nest": {
-         "status": "changed",
-         "before": {
+      "baz": [
+         "changed",
+         "bas",
+         "bars"
+      ],
+      "foo": [
+         "unchanged",
+         "bar"
+      ],
+      "nest": [
+         "changed",
+         {
             "key": "value"
          },
-         "after": "str"
-      }
+         "str"
+      ]
    },
-   "group2": {
-      "status": "deleted",
-      "value": {
+   "group2": [
+      "deleted",
+      {
          "abc": 12345,
          "deep": {
             "id": 45
          }
       }
-   },
-   "group3": {
-      "status": "added",
-      "value": {
+   ],
+   "group3": [
+      "added",
+      {
          "deep": {
             "id": {
                "number": 45
@@ -82,5 +82,5 @@
          },
          "fee": 100500
       }
-   }
+   ]
 }

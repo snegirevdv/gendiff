@@ -1,4 +1,4 @@
-from gendiff.constants import ADDED, CHANGED, DELETED, UNCHANGED
+from gendiff import constants as const
 
 # Common
 VALUE_CONVERTOR = {
@@ -15,9 +15,9 @@ START_LINE = "{\n"
 FINISH_LINE = "}\n"
 
 PREFIXES = {
-    DELETED: "-",
-    UNCHANGED: " ",
-    ADDED: "+",
+    const.DELETED: "-",
+    const.UNCHANGED: " ",
+    const.ADDED: "+",
 }
 
 # Plain
@@ -26,7 +26,7 @@ COMPLEX = "[complex value]"
 DELIMETER = "."
 
 MESSAGES = {
-    ADDED: "was added with value: {value}",
-    DELETED: "was removed",
-    CHANGED: "was updated. From {before} to {after}",
+    const.ADDED: "was added with value: {values[0]}",
+    const.DELETED: "was removed",
+    const.CHANGED: "was updated. From {values[0]} to {values[1]}",
 }

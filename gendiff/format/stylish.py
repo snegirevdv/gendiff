@@ -1,27 +1,11 @@
 from typing import Any
 
-from gendiff.constants import (
-    ADDED,
-    AFTER,
-    BEFORE,
-    CHANGED,
-    DELETED,
-    NESTED,
-    STATUS,
-    UNCHANGED,
-    VALUE,
-)
-from gendiff.format.constants import (
-    FINISH_LINE,
-    INDENT_SIZE,
-    INDENT_SYMBOL,
-    PREFIXES,
-    START_LINE,
-    VALUE_CONVERTOR,
-)
+from gendiff import constants as const
+from gendiff.format import constants as fconst
+from gendiff.format import utils
 
 
-def stylish(
+def get_view(
     diff: dict[str, dict[str, Any]],
     step: int = 0,
 ) -> str:
@@ -35,12 +19,13 @@ def stylish(
     Returns:
         Formatted diff view.
     """
-    view = START_LINE
+    diff = utils.get_sorted_diff(diff)
+    view = fconst.START_LINE
 
     for key, item in diff.items():
         view += get_block(key, item, step)
 
-    view += get_indent(step) + FINISH_LINE
+    view += get_indent(step) + fconst.FINISH_LINE
 
     if not step:
         view = view.rstrip()
@@ -48,51 +33,49 @@ def stylish(
     return view
 
 
-def get_block(key: str, item: dict[str, Any], step: int) -> str:
-    status = item[STATUS]
-
-    if status == NESTED:
-        new_diff = item[VALUE]
+def get_block(key: str, item: list[Any] | dict[str, Any], step: int) -> str:
+    if isinstance(item, dict):
         left = get_left(key, step)
-        right = stylish(diff=new_diff, step=step + 1)
+        right = get_view(diff=item, step=step + 1)
         return left + right
 
-    if status == CHANGED:
-        return get_changed_block(key, item, step)
+    status = item[0]
 
-    value = item[VALUE]
+    if status == const.CHANGED:
+        return get_changed_block(key, item[1:], step)
+
+    value = item[1]
 
     return get_left(key, step, status) + get_right(value, step + 1)
 
 
 def get_changed_block(key, item, step):
-    before = item[BEFORE]
-    after = item[AFTER]
-    first = get_left(key, step, DELETED) + get_right(before, step + 1)
-    second = get_left(key, step, ADDED) + get_right(after, step + 1)
+    before, after = item
+    first = get_left(key, step, const.DELETED) + get_right(before, step + 1)
+    second = get_left(key, step, const.ADDED) + get_right(after, step + 1)
     return first + second
 
 
 def get_left(
     key: str,
     step: int,
-    status: str = UNCHANGED,
+    status: str = const.UNCHANGED,
     subdict: bool = False,
 ) -> str:
     if subdict:
         return f"{get_indent(step)}{key}: "
-    return f"{get_indent(step)}  {PREFIXES[status]} {key}: "
+    return f"{get_indent(step)}  {fconst.PREFIXES[status]} {key}: "
 
 
 def get_right(value: Any, step: int) -> str:
     if isinstance(value, dict):
-        block = START_LINE
+        block = fconst.START_LINE
 
         for sub_key in value:
             block += get_left(key=sub_key, step=step + 1, subdict=True)
             block += get_right(value=value[sub_key], step=step + 1)
 
-        block += get_indent(step) + FINISH_LINE
+        block += get_indent(step) + fconst.FINISH_LINE
 
         return block
 
@@ -100,8 +83,8 @@ def get_right(value: Any, step: int) -> str:
 
 
 def get_indent(step: int) -> str:
-    return f"{INDENT_SYMBOL * step * INDENT_SIZE}"
+    return f"{fconst.INDENT_SYMBOL * step * fconst.INDENT_SIZE}"
 
 
 def update_value(value: Any) -> str:
-    return VALUE_CONVERTOR.get(value, str(value))
+    return fconst.VALUE_CONVERTOR.get(value, str(value))

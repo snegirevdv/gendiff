@@ -3,7 +3,6 @@
 import argparse
 
 import gendiff
-from gendiff import json_format, plain, stylish
 from gendiff.constants import JSON, PLAIN, STYLISH
 
 
@@ -23,14 +22,6 @@ def parse_arguments_from_command() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def parse_formatter(report_format):
-    match report_format:
-        case "plain": return plain
-        case "json": return json_format
-    return stylish
-
-
 def main() -> None:
     args = parse_arguments_from_command()
-    formatter = parse_formatter(args.format)
-    return gendiff.generate_diff(args.first_file, args.second_file, formatter)
+    return gendiff.generate_diff(args.first_file, args.second_file, args.format)

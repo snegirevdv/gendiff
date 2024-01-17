@@ -1,10 +1,10 @@
 import json
 from typing import Any
 
-from gendiff.constants import NESTED, STATUS, VALUE
+from gendiff.format import utils
 
 
-def json_format(diff: dict[str, dict[str, Any]]) -> str:
+def get_view(diff: dict[str, dict[str, Any]]) -> str:
     """
     Format the diff in a standard JSON style.
 
@@ -15,16 +15,5 @@ def json_format(diff: dict[str, dict[str, Any]]) -> str:
     Returns:
         Formatted diff view.
     """
-    pure_diff = get_pure_diff(diff)
-    return json.dumps(pure_diff, indent=3)
-
-
-def get_pure_diff(diff: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
-    new_diff = {}
-    for key, item in diff.items():
-        if item[STATUS] == NESTED:
-            new_diff[key] = get_pure_diff(item[VALUE])
-        else:
-            new_diff[key] = diff[key]
-
-    return new_diff
+    diff = utils.get_sorted_diff(diff)
+    return json.dumps(diff, indent=3)
