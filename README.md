@@ -76,3 +76,20 @@ diff = generate_diff('file1.json', 'file2.json', format='json')
 with open('diff.json', 'w') as file:
     file.write(diff)
 ```
+
+## Screencasts
+
+### JSON files
+[![asciicast](https://asciinema.org/a/zAUM8hA0DwgeRmr3qmwCQTm7m.svg)](https://asciinema.org/a/zAUM8hA0DwgeRmr3qmwCQTm7m)
+
+### YAML files
+[![asciicast](https://asciinema.org/a/JosKZxNTw0EKaKJwi5rnjvkPe.svg)](https://asciinema.org/a/JosKZxNTw0EKaKJwi5rnjvkPe)
+
+### Nested files
+[![asciicast](https://asciinema.org/a/VmrxixnaWbX8B96CT4fTc7uGk.svg)](https://asciinema.org/a/VmrxixnaWbX8B96CT4fTc7uGk)
+
+### Plain formatter
+[![asciicast](https://asciinema.org/a/zLViyGVoY9ua4g4xXFvdvw3bJ.svg)](https://asciinema.org/a/zLViyGVoY9ua4g4xXFvdvw3bJ)
+
+### JSON formatter
+[![asciicast](https://asciinema.org/a/92x4i6argozQEjKWcgTQC6lrn.svg)](https://asciinema.org/a/92x4i6argozQEjKWcgTQC6lrn)
