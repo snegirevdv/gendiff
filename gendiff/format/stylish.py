@@ -9,22 +9,11 @@ def get_view(
     diff: dict[str, dict[str, Any]],
     step: int = 0,
 ) -> str:
-    """
-    Format the diff into a stylish, JSON-like style.
-    Changes marked by "+" (added) and "-" (deleted).
-
-    Args:
-        diff: the diff dictionary.
-        step (optional): the current indentation level. Default: 0.
-
-    Returns:
-        Formatted diff view.
-    """
     diff = utils.get_sorted_diff(diff)
     view = fconst.START_LINE
 
     for key, diff_entry in diff.items():
-        view += get_block(key, diff_entry, step)
+        view += make_block(key, diff_entry, step)
 
     view += get_indent(step) + fconst.FINISH_LINE
 
@@ -34,7 +23,7 @@ def get_view(
     return view
 
 
-def get_block(
+def make_block(
     key: str,
     diff_entry: list[Any] | dict[str, Any],
     step: int,
@@ -45,12 +34,12 @@ def get_block(
     status, *diff_values = diff_entry
 
     if status == const.CHANGED:
-        return get_changed_block(key, diff_values, step)
+        return make_changed_block(key, diff_values, step)
 
     return get_left(key, step, status) + get_right(*diff_values, step)
 
 
-def get_changed_block(key, diff_values, step):
+def make_changed_block(key, diff_values, step):
     before, after = diff_values
     first = get_left(key, step, const.DELETED) + get_right(before, step)
     second = get_left(key, step, const.ADDED) + get_right(after, step)

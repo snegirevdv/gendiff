@@ -6,32 +6,26 @@ from gendiff.format import utils
 
 
 def get_view(diff: dict, prefix: str = "") -> str:
-    """
-    Format the diff into a plain text report.
-
-    Args:
-        diff: diff dictionary.
-        dict1, dict2: compared dictionaries.
-        prefix (optional): current prefix of the file name. Default: "".
-
-    Returns:
-        Formatted diff view.
-    """
     diff = utils.get_sorted_diff(diff)
-    view = ""
-
-    for key, diff_entry in diff.items():
-        if isinstance(diff_entry, dict):
-            new_prefix = prefix + key + fconst.DELIMETER
-            view += get_view(diff=diff_entry, prefix=new_prefix)
-
-        elif diff_entry[0] != const.UNCHANGED:
-            view += get_line(key, diff_entry, prefix)
+    view = "".join(make_block(key, diff, prefix) for key in diff.keys())
 
     if not prefix:
-        view = view.rstrip()
+        return view.rstrip()
 
     return view
+
+
+def make_block(key, diff, prefix):
+    diff_entry = diff[key]
+
+    if isinstance(diff_entry, dict):
+        new_prefix = prefix + key + fconst.DELIMETER
+        return get_view(diff_entry, new_prefix)
+
+    if diff_entry[0] != const.UNCHANGED:
+        return get_line(key, diff_entry, prefix)
+
+    return ""
 
 
 def get_line(key: str, diff_entry: dict[str, Any], prefix: str) -> str:

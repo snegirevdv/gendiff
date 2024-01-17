@@ -13,7 +13,7 @@ FORMATTERS = {
 
 def generate_diff(file1: str, file2: str, format: str = "stylish") -> str:
     """
-    Generate a textual diff report between two files.
+    Generate a textual formatted diff report between two files.
 
     Args:
         file1: Path to the first file to compare.
@@ -24,13 +24,9 @@ def generate_diff(file1: str, file2: str, format: str = "stylish") -> str:
         stylish (default): JSON-like format, changes marked by "+" and "-".
         plain: textual report of changes, shows property updates.
         json_format: standard JSON format representation.
-
-    Returns:
-        Formatted diff string representing the differences.
-
     """
-    data = parser.parse_data_from_files(file1, file2)
-    diff = create_diff(*data)
+    parsed_dict1, parsed_dict2 = parser.parse_data_from_files(file1, file2)
+    diff = create_diff(parsed_dict1, parsed_dict2)
     formatter = get_formatter(format)
 
     return formatter(diff)
@@ -41,11 +37,11 @@ def create_diff(
     dict2: dict[str, Any],
 ) -> dict[str, dict[str, Any] | list[Any]]:
     """
-    Create a diff dictionary representing the diff between two dictinaries.
+    Create a dictionary representing the diff between two dictinaries.
 
     Returns:
         Dictionary contains keys from both dicts.
-        Key's values contain lists dictionary describing the changes.
+        Key's values contain lists describing the changes.
         For nested dictionaries values contain recursive diff dictionaries.
     """
     keys = set(dict1).union(dict2)
@@ -57,10 +53,10 @@ def create_item(
     dict1: dict[str, Any],
     dict2: dict[str, Any],
 ) -> dict[str, Any] | list[Any]:
-    if is_nested(key, dict1, dict2):
+    if is_nested_diff(key, dict1, dict2):
         return create_diff(dict1=dict1[key], dict2=dict2[key])
 
-    status = get_status(key, dict1, dict2)
+    status = calculate_status(key, dict1, dict2)
 
     if status == const.CHANGED:
         return [status, dict1[key], dict2[key]]
@@ -70,8 +66,12 @@ def create_item(
     return [status, diff_value]
 
 
-def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
-    v1, v2 = dict1.get(key), dict2.get(key)
+def calculate_status(
+    key: str,
+    dict1: dict[str, Any],
+    dict2: dict[str, Any]
+) -> str:
+    value1, value2 = dict1.get(key), dict2.get(key)
 
     if key not in dict1:
         return const.ADDED
@@ -79,15 +79,23 @@ def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
     if key not in dict2:
         return const.DELETED
 
-    if v1 == v2:
+    if value1 == value2:
         return const.UNCHANGED
 
     return const.CHANGED
 
 
-def is_nested(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> bool:
-    v1, v2 = dict1.get(key), dict2.get(key)
-    return isinstance(v1, dict) and isinstance(v2, dict) and v1 != v2
+def is_nested_diff(
+    key: str,
+    dict1: dict[str, Any],
+    dict2: dict[str, Any]
+) -> bool:
+    value1, value2 = dict1.get(key), dict2.get(key)
+    return (
+        isinstance(value1, dict)
+        and isinstance(value2, dict)
+        and value1 != value2
+    )
 
 
 def get_formatter(format: str) -> Callable:
