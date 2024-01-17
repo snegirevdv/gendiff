@@ -13,7 +13,8 @@ def parse_arguments_from_command() -> argparse.Namespace:
     parser.add_argument("first_file")
     parser.add_argument("second_file")
     parser.add_argument(
-        "-f", "--format",
+        "-f",
+        "--format",
         metavar="FORMAT",
         choices=[PLAIN, JSON, STYLISH],
         help="set format of output",

@@ -46,7 +46,7 @@ from gendiff import constants as const
             "yaml/recursive1.yml",
             "yaml/recursive2.yml",
         ],
-    ]
+    ],
 )
 def test_stylish(prepare_data, answer_path, file1_path, file2_path):
     answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
@@ -96,7 +96,7 @@ def test_stylish(prepare_data, answer_path, file1_path, file2_path):
             "yaml/recursive1.yml",
             "yaml/recursive2.yml",
         ],
-    ]
+    ],
 )
 def test_plain(prepare_data, answer_path, file1_path, file2_path):
     answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
@@ -146,7 +146,7 @@ def test_plain(prepare_data, answer_path, file1_path, file2_path):
             "yaml/recursive1.yml",
             "yaml/recursive2.yml",
         ],
-    ]
+    ],
 )
 def test_json(prepare_data, answer_path, file1_path, file2_path):
     answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
@@ -174,7 +174,7 @@ def test_incorrect_files(update_path):
     [
         ["json/plain1.json", "json/invalid.json"],
         ["yaml/plain1.yml", "yaml/invalid.yml"],
-    ]
+    ],
 )
 def test_encoder_error(update_path, file1, file2):
     file1, file2 = update_path(file1, file2)

@@ -77,7 +77,7 @@ def get_status(key: str, dict1: dict[str, Any], dict2: dict[str, Any]) -> str:
     return const.CHANGED
 
 
-def is_nested(key: str, dict1: dict[str: Any], dict2: dict[str: Any]) -> bool:
+def is_nested(key: str, dict1: dict[str:Any], dict2: dict[str:Any]) -> bool:
     v1, v2 = dict1.get(key), dict2.get(key)
     return isinstance(v1, dict) and isinstance(v2, dict) and v1 != v2
 

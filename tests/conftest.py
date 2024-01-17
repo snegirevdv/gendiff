@@ -26,6 +26,7 @@ def update_path():
         file1_path = get_path(file1_path)
         file2_path = get_path(file2_path)
         return file1_path, file2_path
+
     return inner
 
 
