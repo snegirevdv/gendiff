@@ -48,4 +48,6 @@ def update_value(value: Any) -> str:
         return fconst.COMPLEX
     if value is None or isinstance(value, bool):
         return fconst.VALUE_CONVERTOR[value]
-    return f"'{value}'"
+    if isinstance(value, str):
+        return f"'{value}'"
+    return str(value)
