@@ -1,6 +1,7 @@
 from typing import Any
 
-from gendiff import constants as const, diff
+from gendiff import constants as const
+from gendiff import diff
 from gendiff.format import constants as fconst
 
 

@@ -1,5 +1,6 @@
 from itertools import repeat
 from typing import Any
+
 from gendiff import constants as const
 
 

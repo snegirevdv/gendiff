@@ -1,6 +1,7 @@
 from typing import Any
 
-from gendiff import constants as const, diff
+from gendiff import constants as const
+from gendiff import diff
 from gendiff.format import constants as fconst
 
 
@@ -10,7 +11,7 @@ def get_view(diffs: list[dict[str, Any]], step: int = 0) -> str:
     view += make_indent(step) + fconst.FINISH_LINE
 
     if not step:
-        view = view.rstrip()
+        return view.rstrip()
 
     return view
 

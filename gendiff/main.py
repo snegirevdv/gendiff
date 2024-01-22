@@ -1,7 +1,7 @@
 from typing import Callable
 
-from gendiff import constants as const, diff
-from gendiff import parser
+from gendiff import constants as const
+from gendiff import diff, parser
 from gendiff.format import json_format, plain, stylish
 
 FORMATTERS = {

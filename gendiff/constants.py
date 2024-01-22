@@ -26,4 +26,3 @@ VALUE = "value"
 EXTENSION_ERROR = "ERROR: Files have incorrect extension"
 NOT_FOUND_ERROR = "ERROR: File Not Found"
 INVALID_ERROR = "ERROR: Files contain invalid data"
-
