@@ -11,13 +11,17 @@ FORMATTERS = {
 }
 
 
-def generate_diff(file1: str, file2: str, format: str = "stylish") -> str:
+def generate_diff(
+    file1_path: str,
+    file2_path: str,
+    format: str = const.STYLISH
+) -> str:
     """
     Generate a textual formatted diff report between two files.
 
     Args:
-        file1: Path to the first file to compare.
-        file2: Path to the second file to compare.
+        file1_path: Path to the first file to compare.
+        file2_path: Path to the second file to compare.
         formatter (optional): Function to format the diff output.
 
     Formatter Options:
@@ -25,8 +29,8 @@ def generate_diff(file1: str, file2: str, format: str = "stylish") -> str:
         plain: textual report of changes, shows property updates.
         json_format: standard JSON format representation.
     """
-    parsed_dict1, parsed_dict2 = parser.parse_data_from_files(file1, file2)
-    diff = create_diff(parsed_dict1, parsed_dict2)
+    parsed_data = parser.parse_data_from_files(file1_path, file2_path)
+    diff = create_diff(*parsed_data)
     formatter = get_formatter(format)
 
     return formatter(diff)

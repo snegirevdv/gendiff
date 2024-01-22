@@ -6,20 +6,26 @@ from gendiff import constants as const
 
 
 def parse_data_from_files(
-    file1: str,
-    file2: str
+    file1_path: str,
+    file2_path: str
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     try:
         if (
-            file1.endswith(const.JSON_FORMATS)
-            and file2.endswith(const.JSON_FORMATS)
+            file1_path.endswith(const.JSON_FORMATS)
+            and file2_path.endswith(const.JSON_FORMATS)
         ):
-            return parse_json_from_file(file1), parse_json_from_file(file2)
+            return (
+                parse_json_from_file(file1_path),
+                parse_json_from_file(file2_path)
+            )
         if (
-            file1.endswith(const.YAML_FORMATS)
-            and file2.endswith(const.YAML_FORMATS)
+            file1_path.endswith(const.YAML_FORMATS)
+            and file2_path.endswith(const.YAML_FORMATS)
         ):
-            return parse_yaml_from_file(file1), parse_yaml_from_file(file2)
+            return (
+                parse_yaml_from_file(file1_path),
+                parse_yaml_from_file(file2_path)
+            )
         raise ValueError(const.EXTENSION_ERROR)
     except FileNotFoundError:
         raise FileNotFoundError(const.NOT_FOUND_ERROR)

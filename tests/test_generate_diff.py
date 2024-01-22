@@ -170,14 +170,14 @@ def test_incorrect_files(update_path):
 
 
 @pytest.mark.parametrize(
-    "file1, file2",
+    "file1_path, file2_path",
     [
         ["json/plain1.json", "json/invalid.json"],
         ["yaml/plain1.yml", "yaml/invalid.yml"],
     ],
 )
-def test_encoder_error(update_path, file1, file2):
-    file1, file2 = update_path(file1, file2)
+def test_encoder_error(update_path, file1_path, file2_path):
+    file1_path, file2_path = update_path(file1_path, file2_path)
     with pytest.raises(ValueError) as e:
-        gendiff.generate_diff(file1, file2)
+        gendiff.generate_diff(file1_path, file2_path)
     assert str(e.value) == "ERROR: Files contain invalid data"
