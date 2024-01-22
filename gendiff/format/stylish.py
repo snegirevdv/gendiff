@@ -44,14 +44,6 @@ def make_right(diff_value: Any, step: int) -> str:
     return update_value(diff_value) + "\n"
 
 
-def make_indent(step: int) -> str:
-    return f"{fconst.SPACE * fconst.INDENT_SIZE * step}"
-
-
-def make_prefix(status: str) -> str:
-    return fconst.SPACE * 2 + fconst.PREFIXES[status] + fconst.SPACE
-
-
 def make_subdict_view(subdict: dict[str, Any], step) -> str:
     view = fconst.START_LINE
 
@@ -68,3 +60,11 @@ def update_value(value: Any) -> str:
     if value is None or isinstance(value, bool):
         return fconst.VALUE_CONVERTOR[value]
     return str(value)
+
+
+def make_indent(step: int) -> str:
+    return f"{fconst.SPACE * fconst.INDENT_SIZE * step}"
+
+
+def make_prefix(status: str) -> str:
+    return fconst.SPACE * 2 + fconst.PREFIXES[status] + fconst.SPACE
