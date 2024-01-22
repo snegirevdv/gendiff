@@ -1,22 +1,27 @@
-{
-   "follow": [
-      "deleted",
-      false
-   ],
-   "host": [
-      "deleted",
-      "hexlet.io"
-   ],
-   "nothing": [
-      "deleted",
-      null
-   ],
-   "proxy": [
-      "deleted",
-      "123.234.53.22"
-   ],
-   "timeout": [
-      "deleted",
-      50
-   ]
-}
+[
+   {
+      "key": "follow",
+      "status": "deleted",
+      "value": false
+   },
+   {
+      "key": "host",
+      "status": "deleted",
+      "value": "hexlet.io"
+   },
+   {
+      "key": "nothing",
+      "status": "deleted",
+      "value": null
+   },
+   {
+      "key": "proxy",
+      "status": "deleted",
+      "value": "123.234.53.22"
+   },
+   {
+      "key": "timeout",
+      "status": "deleted",
+      "value": 50
+   }
+]
