@@ -26,7 +26,7 @@ COMPLEX = "[complex value]"
 DELIMETER = "."
 
 MESSAGES = {
-    const.ADDED: "was added with value: {values[0]}",
+    const.ADDED: "was added with value: {}",
     const.DELETED: "was removed",
-    const.CHANGED: "was updated. From {values[0]} to {values[1]}",
+    const.CHANGED: "was updated. From {} to {}",
 }
