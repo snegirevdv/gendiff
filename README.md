@@ -55,7 +55,7 @@ gendiff file1.yml file2.yml --format plain
 ### As a Library:
 Gendiff can also be used as a Python library.
 ```python
-from gendiff import generate_diff, create_diff
+from gendiff import generate_diff, get_diffs
 
 # Generate a diff using the default formatter
 diff = generate_diff('file1.json', 'file2.json')
@@ -63,8 +63,8 @@ diff = generate_diff('file1.json', 'file2.json')
 # Generate a diff using different formatter
 diff_plain = generate_diff('file1.json', 'file2.json', format='plain')
 
-# Generate a diff as a dictionary
-diff = create_diff('file1.json', 'file2.json')
+# Generate a diff as a list of dictionaries
+diff = get_diffs('file1.json', 'file2.json')
 ```
 
 ### Saving the Diff to a File:

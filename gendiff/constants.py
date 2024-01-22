@@ -12,8 +12,18 @@ DELETED = "deleted"
 UNCHANGED = "unchanged"
 ADDED = "added"
 CHANGED = "changed"
+NESTED = "nested"
+
+# diff keys
+STATUS = "status"
+KEY = "key"
+ELEMENTS = "elements"
+BEFORE = "before"
+AFTER = "after"
+VALUE = "value"
 
 # Parser error messages
 EXTENSION_ERROR = "ERROR: Files have incorrect extension"
 NOT_FOUND_ERROR = "ERROR: File Not Found"
 INVALID_ERROR = "ERROR: Files contain invalid data"
+

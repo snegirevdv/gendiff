@@ -10,7 +10,7 @@ VALUE_CONVERTOR = {
 # Stylish
 INDENT_SIZE = 4
 
-INDENT_SYMBOL = " "
+SPACE = " "
 START_LINE = "{\n"
 FINISH_LINE = "}\n"
 
