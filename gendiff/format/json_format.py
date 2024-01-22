@@ -1,9 +1,9 @@
 import json
 from typing import Any
 
-from gendiff.format import utils
-
 
 def get_view(diff: dict[str, dict[str, Any]]) -> str:
-    diff = utils.get_sorted_diff(diff)
+    result = json.dumps(diff, indent=3)
+    with open("json_.txt", "w") as file:
+        file.write(result)
     return json.dumps(diff, indent=3)
