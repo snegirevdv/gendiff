@@ -1,21 +1,13 @@
 from typing import Any
 
-from gendiff import constants as const
+from gendiff import constants as const, diff
 from gendiff.format import constants as fconst
-from gendiff.format import utils
 
 
-def get_view(
-    diff: dict[str, dict[str, Any]],
-    step: int = 0,
-) -> str:
-    diff = utils.get_sorted_diff(diff)
+def get_view(diffs: list[dict[str, Any]], step: int = 0) -> str:
     view = fconst.START_LINE
-
-    for key, diff_entry in diff.items():
-        view += make_block(key, diff_entry, step)
-
-    view += get_indent(step) + fconst.FINISH_LINE
+    view += "".join(make_block(diff_item, step) for diff_item in diffs)
+    view += make_indent(step) + fconst.FINISH_LINE
 
     if not step:
         view = view.rstrip()
@@ -23,57 +15,53 @@ def get_view(
     return view
 
 
-def make_block(
-    key: str,
-    diff_entry: list[Any] | dict[str, Any],
-    step: int,
-) -> str:
-    if isinstance(diff_entry, dict):
-        return get_left(key, step) + get_view(diff_entry, step + 1)
+def make_block(diff_item: dict[str, Any], step: int) -> str:
+    status = diff.get_status(diff_item)
+    key = diff.get_key(diff_item)
 
-    status, *diff_values = diff_entry
+    if status == const.NESTED:
+        elements = diff.get_nested_elements(diff_item)
+        return make_left(key, step) + get_view(elements, step + 1)
 
     if status == const.CHANGED:
-        return make_changed_block(key, diff_values, step)
+        before, after = diff.get_changed_values(diff_item)
+        first = make_left(key, step, const.DELETED) + make_right(before, step)
+        second = make_left(key, step, const.ADDED) + make_right(after, step)
+        return first + second
 
-    return get_left(key, step, status) + get_right(*diff_values, step)
+    diff_value = diff.get_value(diff_item)
 
-
-def make_changed_block(key, diff_values, step):
-    before, after = diff_values
-    first = get_left(key, step, const.DELETED) + get_right(before, step)
-    second = get_left(key, step, const.ADDED) + get_right(after, step)
-    return first + second
+    return make_left(key, step, status) + make_right(diff_value, step)
 
 
-def get_left(
-    key: str,
-    step: int,
-    status: str = const.UNCHANGED,
-    subdict: bool = False,
-) -> str:
-    if subdict:
-        return f"{get_indent(step + 1)}{key}: "
-    return f"{get_indent(step)}  {fconst.PREFIXES[status]} {key}: "
+def make_left(key: str, step: int, status: str = const.UNCHANGED) -> str:
+    return f"{make_indent(step)}{make_prefix(status)}{key}: "
 
 
-def get_right(diff_value: Any, step: int) -> str:
+def make_right(diff_value: Any, step: int) -> str:
     if isinstance(diff_value, dict):
-        block = fconst.START_LINE
-
-        for sub_key in diff_value:
-            block += get_left(sub_key, step + 1, subdict=True)
-            block += get_right(diff_value[sub_key], step + 1)
-
-        block += get_indent(step + 1) + fconst.FINISH_LINE
-
-        return block
-
+        return make_subdict_view(diff_value, step + 1)
     return update_value(diff_value) + "\n"
 
 
-def get_indent(step: int) -> str:
-    return f"{fconst.INDENT_SYMBOL * fconst.INDENT_SIZE * step}"
+def make_indent(step: int) -> str:
+    return f"{fconst.SPACE * fconst.INDENT_SIZE * step}"
+
+
+def make_prefix(status: str) -> str:
+    return fconst.SPACE * 2 + fconst.PREFIXES[status] + fconst.SPACE
+
+
+def make_subdict_view(subdict: dict[str, Any], step) -> str:
+    view = fconst.START_LINE
+
+    for key in subdict:
+        value = subdict[key]
+        view += make_left(key, step) + make_right(value, step)
+
+    view += make_indent(step) + fconst.FINISH_LINE
+
+    return view
 
 
 def update_value(value: Any) -> str:
