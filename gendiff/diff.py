@@ -43,8 +43,8 @@ def create_diff_item(
         return {
             consts.KEY: key,
             consts.STATUS: status,
-            consts.BEFORE: dict1[key],
-            consts.AFTER: dict2[key],
+            consts.BEFORE: dict1.get(key),
+            consts.AFTER: dict2.get(key),
         }
 
     # The only one dict contains the key or both dicts contain the same value
