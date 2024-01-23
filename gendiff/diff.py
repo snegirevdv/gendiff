@@ -8,7 +8,8 @@ def get_diffs(
     dict2: dict[str, Any],
 ) -> list[dict[str, Any]]:
     """
-    Creates a list of dicts representing the differences between two dicts.
+    Creates a list of dictionaries representing the differences
+    between two initial dictionaries.
 
     Returns:
         List contains dictionaries of diff items.
