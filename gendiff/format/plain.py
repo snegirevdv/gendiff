@@ -5,6 +5,9 @@ from gendiff.format import consts as fconsts
 
 
 def render_view(diffs: list[dict[str, Any]], prefix: str = "") -> str:
+    """
+    Represents the diff as a simple text report.
+    """
     view = "".join(make_item_block(diff_item, prefix) for diff_item in diffs)
 
     if not prefix:
@@ -14,6 +17,14 @@ def render_view(diffs: list[dict[str, Any]], prefix: str = "") -> str:
 
 
 def make_item_block(diff_item: dict[str, Any], prefix: str) -> str:
+    """
+    Formats a single diff item into a text line.
+    For nested diffs renders an additional view with key prefixes.
+    Ignores unchanged items.
+
+    Returns:
+        str: A line describing changes and values.
+    """
     key = diff.get_key(diff_item)
     status = diff.get_status(diff_item)
 
@@ -39,6 +50,10 @@ def make_item_block(diff_item: dict[str, Any], prefix: str) -> str:
 
 
 def stringify_value(value: Any) -> str:
+    """
+    Formats the dictionary values in text report format.
+    For dictionary values hides the value behind the stub.
+    """
     if isinstance(value, dict):
         return fconsts.COMPLEX
 
@@ -51,5 +66,8 @@ def stringify_value(value: Any) -> str:
     return str(value)
 
 
-def get_message(status, *values):
+def get_message(status: str, *values) -> str:
+    """
+    Generates a message describing a diff item.
+    """
     return fconsts.MESSAGES[status].format(*values)

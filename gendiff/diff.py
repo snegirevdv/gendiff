@@ -8,12 +8,11 @@ def get_diffs(
     dict2: dict[str, Any],
 ) -> list[dict[str, Any]]:
     """
-    Create a list of dicts representing the diff between two dictinaries.
+    Creates a list of dicts representing the differences between two dicts.
 
     Returns:
-        List contains data from both dicts.
-        Entries contain the change statuses, and values from both dictionaries.
-        For nested dictionaries values contain recursive diff lists.
+        List contains dictionaries of diff items.
+        For nested dictionaries, it contains recursive diff lists.
     """
     keys = sorted(set(dict1).union(dict2))
     return [create_diff_item(key, dict1, dict2) for key in keys]
@@ -24,6 +23,12 @@ def create_diff_item(
     dict1: dict[str, Any],
     dict2: dict[str, Any],
 ) -> dict[str, Any]:
+    """
+    Generates a dictionary representing of a single diff item.
+
+    Returns:
+        Dictionary contains the status of the item, key and values.
+    """
     status = calculate_status(key, dict1, dict2)
 
     if status == consts.NESTED:
@@ -41,6 +46,7 @@ def create_diff_item(
             consts.AFTER: dict2[key],
         }
 
+    # The only one dict contains the key or both dicts contain the same value
     value = dict1.get(key) if key in dict1 else dict2.get(key)
 
     return {
@@ -55,6 +61,12 @@ def calculate_status(
     dict1: dict[str, Any],
     dict2: dict[str, Any]
 ) -> str:
+    """
+    Determines the status of an item based on its presence and values.
+
+    Options:
+        added, deleted, unchanged, nested, or changed.
+    """
     value1, value2 = dict1.get(key), dict2.get(key)
 
     if key not in dict1:
