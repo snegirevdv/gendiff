@@ -1,6 +1,8 @@
 import json
 from typing import Any
 
+from gendiff.format import consts
 
-def get_view(diff: dict[str, dict[str, Any]]) -> str:
-    return json.dumps(diff, indent=3)
+
+def render_view(diffs: list[dict[str, Any]]) -> str:
+    return json.dumps(diffs, indent=consts.JSON_INDENT)

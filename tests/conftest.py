@@ -7,25 +7,25 @@ FIXTURES_PATH = "tests/fixtures/"
 
 @pytest.fixture
 def prepare_data():
-    def inner(answer_path, file1_path, file2_path):
-        file1_path = get_path(file1_path)
-        file2_path = get_path(file2_path)
+    def inner(answer_path, file_path_1, file_path_2):
+        file_path_1 = get_path(file_path_1)
+        file_path_2 = get_path(file_path_2)
         answer_path = get_path(answer_path)
 
         with open(answer_path) as file:
             answer = file.read()
 
-        return answer, file1_path, file2_path
+        return answer, file_path_1, file_path_2
 
     return inner
 
 
 @pytest.fixture
 def update_path():
-    def inner(file1_path, file2_path):
-        file1_path = get_path(file1_path)
-        file2_path = get_path(file2_path)
-        return file1_path, file2_path
+    def inner(file_path_1, file_path_2):
+        file_path_1 = get_path(file_path_1)
+        file_path_2 = get_path(file_path_2)
+        return file_path_1, file_path_2
 
     return inner
 

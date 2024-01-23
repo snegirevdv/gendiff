@@ -1,10 +1,10 @@
 import gendiff
 import pytest
-from gendiff import constants as const
+from gendiff import consts
 
 
 @pytest.mark.parametrize(
-    "answer_path, file1_path, file2_path",
+    "answer_path, file_path_1, file_path_2",
     [
         [
             "answers/stylish_plain_plain.txt",
@@ -48,13 +48,18 @@ from gendiff import constants as const
         ],
     ],
 )
-def test_stylish(prepare_data, answer_path, file1_path, file2_path):
-    answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
-    assert gendiff.generate_diff(file1, file2, const.STYLISH) == answer
+def test_stylish_format_success(
+    prepare_data,
+    answer_path,
+    file_path_1,
+    file_path_2
+):
+    answer, file1, file2 = prepare_data(answer_path, file_path_1, file_path_2)
+    assert gendiff.generate_diff(file1, file2, consts.STYLISH) == answer
 
 
 @pytest.mark.parametrize(
-    "answer_path, file1_path, file2_path",
+    "answer_path, file_path_1, file_path_2",
     [
         [
             "answers/plain_plain_plain.txt",
@@ -98,13 +103,18 @@ def test_stylish(prepare_data, answer_path, file1_path, file2_path):
         ],
     ],
 )
-def test_plain(prepare_data, answer_path, file1_path, file2_path):
-    answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
-    assert gendiff.generate_diff(file1, file2, const.PLAIN) == answer
+def test_plain_format_success(
+    prepare_data,
+    answer_path,
+    file_path_1,
+    file_path_2
+):
+    answer, file1, file2 = prepare_data(answer_path, file_path_1, file_path_2)
+    assert gendiff.generate_diff(file1, file2, consts.PLAIN) == answer
 
 
 @pytest.mark.parametrize(
-    "answer_path, file1_path, file2_path",
+    "answer_path, file_path_1, file_path_2",
     [
         [
             "answers/json_plain_plain.txt",
@@ -148,19 +158,24 @@ def test_plain(prepare_data, answer_path, file1_path, file2_path):
         ],
     ],
 )
-def test_json(prepare_data, answer_path, file1_path, file2_path):
-    answer, file1, file2 = prepare_data(answer_path, file1_path, file2_path)
-    result = gendiff.generate_diff(file1, file2, const.JSON)
+def test_json_format_success(
+    prepare_data,
+    answer_path,
+    file_path_1,
+    file_path_2
+):
+    answer, file1, file2 = prepare_data(answer_path, file_path_1, file_path_2)
+    result = gendiff.generate_diff(file1, file2, consts.JSON)
     assert result == answer
 
 
-def test_not_found_error(update_path):
+def test_parser_not_found_failure(update_path):
     file1, file2 = update_path("json/plain1.json", "json/plain.json")
     with pytest.raises(FileNotFoundError):
         gendiff.generate_diff(file1, file2)
 
 
-def test_incorrect_files(update_path):
+def test_parser_extension_failure(update_path):
     file1 = "png/incorrect_format_1.png"
     file2 = "png/incorrect_format_2.png"
     file1, file2 = update_path(file1, file2)
@@ -170,14 +185,14 @@ def test_incorrect_files(update_path):
 
 
 @pytest.mark.parametrize(
-    "file1_path, file2_path",
+    "file_path_1, file_path_2",
     [
         ["json/plain1.json", "json/invalid.json"],
         ["yaml/plain1.yml", "yaml/invalid.yml"],
     ],
 )
-def test_encoder_error(update_path, file1_path, file2_path):
-    file1_path, file2_path = update_path(file1_path, file2_path)
+def test_parser_encoder_failure(update_path, file_path_1, file_path_2):
+    file_path_1, file_path_2 = update_path(file_path_1, file_path_2)
     with pytest.raises(ValueError) as e:
-        gendiff.generate_diff(file1_path, file2_path)
+        gendiff.generate_diff(file_path_1, file_path_2)
     assert str(e.value) == "ERROR: Files contain invalid data"

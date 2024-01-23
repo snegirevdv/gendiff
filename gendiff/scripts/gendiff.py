@@ -3,7 +3,7 @@
 import argparse
 
 import gendiff
-from gendiff.constants import JSON, PLAIN, STYLISH
+from gendiff.consts import JSON, PLAIN, STYLISH
 
 
 def parse_arguments_from_command() -> argparse.Namespace:
@@ -26,3 +26,7 @@ def parse_arguments_from_command() -> argparse.Namespace:
 def main() -> None:
     args = parse_arguments_from_command()
     print(gendiff.generate_diff(args.first_file, args.second_file, args.format))
+
+
+if __name__ == "__main__":
+    main()

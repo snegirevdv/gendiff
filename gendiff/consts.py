@@ -3,6 +3,8 @@ STYLISH = "stylish"
 PLAIN = "plain"
 JSON = "json"
 
+DEFAULT_FORMAT = "stylish"
+
 # File formats
 YAML_FORMATS = ("yaml", "yml")
 JSON_FORMATS = ("json",)

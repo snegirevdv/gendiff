@@ -1,7 +1,6 @@
-from itertools import repeat
 from typing import Any
 
-from gendiff import constants as const
+from gendiff import consts
 
 
 def get_diffs(
@@ -17,37 +16,37 @@ def get_diffs(
         For nested dictionaries values contain recursive diff lists.
     """
     keys = sorted(set(dict1).union(dict2))
-    return list(map(create_diff_item, keys, repeat(dict1), repeat(dict2)))
+    return [create_diff_item(key, dict1, dict2) for key in keys]
 
 
 def create_diff_item(
     key: str,
     dict1: dict[str, Any],
     dict2: dict[str, Any],
-) -> dict[str, Any] | list[Any]:
-    if is_nested_diff(key, dict1, dict2):
-        return {
-            const.KEY: key,
-            const.STATUS: const.NESTED,
-            const.ELEMENTS: get_diffs(dict1[key], dict2[key]),
-        }
-
+) -> dict[str, Any]:
     status = calculate_status(key, dict1, dict2)
 
-    if status == const.CHANGED:
+    if is_nested_diff(key, dict1, dict2) and status == consts.CHANGED:
         return {
-            const.KEY: key,
-            const.STATUS: status,
-            const.BEFORE: dict1[key],
-            const.AFTER: dict2[key],
+            consts.KEY: key,
+            consts.STATUS: consts.NESTED,
+            consts.ELEMENTS: get_diffs(dict1.get(key), dict2.get(key)),
         }
 
-    diff_value = dict1.get(key) if key in dict1 else dict2[key]
+    if status == consts.CHANGED:
+        return {
+            consts.KEY: key,
+            consts.STATUS: status,
+            consts.BEFORE: dict1[key],
+            consts.AFTER: dict2[key],
+        }
+
+    value = dict1.get(key) if key in dict1 else dict2.get(key)
 
     return {
-        const.KEY: key,
-        const.STATUS: status,
-        const.VALUE: diff_value,
+        consts.KEY: key,
+        consts.STATUS: status,
+        consts.VALUE: value,
     }
 
 
@@ -59,15 +58,15 @@ def calculate_status(
     value1, value2 = dict1.get(key), dict2.get(key)
 
     if key not in dict1:
-        return const.ADDED
+        return consts.ADDED
 
     if key not in dict2:
-        return const.DELETED
+        return consts.DELETED
 
     if value1 == value2:
-        return const.UNCHANGED
+        return consts.UNCHANGED
 
-    return const.CHANGED
+    return consts.CHANGED
 
 
 def is_nested_diff(
@@ -75,29 +74,27 @@ def is_nested_diff(
     dict1: dict[str, Any],
     dict2: dict[str, Any]
 ) -> bool:
-    value1, value2 = dict1.get(key), dict2.get(key)
     return (
-        isinstance(value1, dict)
-        and isinstance(value2, dict)
-        and value1 != value2
+        isinstance(dict1.get(key), dict)
+        and isinstance(dict2.get(key), dict)
     )
 
 
 def get_status(diff_item: dict[str, Any]) -> str:
-    return diff_item[const.STATUS]
+    return diff_item[consts.STATUS]
 
 
 def get_key(diff_item: dict[str, Any]) -> str:
-    return diff_item[const.KEY]
+    return diff_item[consts.KEY]
 
 
 def get_nested_elements(diff_item: dict[str, Any]) -> dict[str, Any]:
-    return diff_item[const.ELEMENTS]
+    return diff_item[consts.ELEMENTS]
 
 
 def get_changed_values(diff_item: dict[str, Any]) -> tuple[Any, Any]:
-    return diff_item[const.BEFORE], diff_item[const.AFTER]
+    return diff_item[consts.BEFORE], diff_item[consts.AFTER]
 
 
-def get_value(diff_item: dict[str, Any]) -> tuple[Any, Any]:
-    return diff_item[const.VALUE]
+def get_value(diff_item: dict[str, Any]) -> Any:
+    return diff_item[consts.VALUE]
