@@ -38,16 +38,16 @@ def parse_json_from_file(file_path: str) -> dict[str, Any]:
             if not isinstance(data, dict):
                 raise ValueError(consts.INVALID_ERROR)
             return data
-        except json.JSONDecodeError:
-            raise ValueError(consts.INVALID_ERROR)
+        except json.JSONDecodeError as e:
+            raise ValueError(consts.INVALID_ERROR) from e
 
 
-def parse_yaml_from_file(file_path) -> dict[str, Any]:
+def parse_yaml_from_file(file_path: str) -> dict[str, Any]:
     with open(file_path) as file:
         try:
             data = yaml.safe_load(file)
             if data is not None:
                 return data
             return {}
-        except (yaml.YAMLError, KeyError):
-            raise ValueError(consts.INVALID_ERROR)
+        except (yaml.YAMLError, KeyError) as e:
+            raise ValueError(consts.INVALID_ERROR) from e
