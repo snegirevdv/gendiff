@@ -26,7 +26,7 @@ def create_diff_item(
 ) -> dict[str, Any]:
     status = calculate_status(key, dict1, dict2)
 
-    if is_nested_diff(key, dict1, dict2) and status == consts.CHANGED:
+    if status == consts.NESTED:
         return {
             consts.KEY: key,
             consts.STATUS: consts.NESTED,
@@ -65,6 +65,9 @@ def calculate_status(
 
     if value1 == value2:
         return consts.UNCHANGED
+
+    if is_nested_diff(key, dict1, dict2):
+        return consts.NESTED
 
     return consts.CHANGED
 
