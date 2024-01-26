@@ -7,8 +7,6 @@ from gendiff.format import consts as fconsts
 def render_view(diffs: list[dict[str, Any]], step: int = 0) -> str:
     """
     Represents the diffs as a stylish, JSON-like fomatted report.
-
-    Changes are marked by "+" and "-".
     """
     view = fconsts.START_LINE
     view += "".join(make_item_block(diff_item, step) for diff_item in diffs)
@@ -34,23 +32,26 @@ def make_item_block(diff_item: dict[str, Any], step: int) -> str:
 
     if status == consts.NESTED:
         elements = diff.get_nested_elements(diff_item)
-        return make_left_part(key, step) + render_view(elements, step + 1)
+        return (
+            make_key_part(key, step, status)
+            + render_view(elements, step + 1)
+        )
 
     if status == consts.CHANGED:
         before_value, after_value = diff.get_changed_values(diff_item)
-        first_line = (make_left_part(key, step, status=consts.DELETED)
-                      + make_right_part(before_value, step))
-        second_line = (make_left_part(key, step, status=consts.ADDED)
-                       + make_right_part(after_value, step))
+        first_line = (make_key_part(key, step, status=consts.DELETED)
+                      + make_value_part(before_value, step))
+        second_line = (make_key_part(key, step, status=consts.ADDED)
+                       + make_value_part(after_value, step))
         return first_line + second_line
 
     value = diff.get_value(diff_item)
-    return make_left_part(key, step, status) + make_right_part(value, step)
+    return make_key_part(key, step, status) + make_value_part(value, step)
 
 
-def make_left_part(key: str, step: int, status: str = consts.UNCHANGED) -> str:
+def make_key_part(key: str, step: int, status: str) -> str:
     """
-    Makes a left part of the diff block line.
+    Makes the left part of the block contain the indent, the prefix, and the key
 
     Returns:
         str: the intent, the prefix if it needs (+/-) and the key.
@@ -58,9 +59,9 @@ def make_left_part(key: str, step: int, status: str = consts.UNCHANGED) -> str:
     return f"{make_indent(step)}{make_prefix(status)}{key}: "
 
 
-def make_right_part(value: Any, step: int) -> str:
+def make_value_part(value: Any, step: int) -> str:
     """
-    Makes a left part of the diff block line.
+    Makes the right part of the block contain the value of the item.
 
     Returns:
         str: JSON-like view of the value.
@@ -77,8 +78,11 @@ def stringify_dict_value(subdict: dict[str, Any], step) -> str:
     view = fconsts.START_LINE
 
     for key in subdict:
-        value = subdict[key]
-        view += make_left_part(key, step) + make_right_part(value, step)
+        value = subdict.get(key)
+        view += (
+            make_key_part(key, step, status=consts.UNCHANGED)
+            + make_value_part(value, step)
+        )
 
     view += make_indent(step) + fconsts.FINISH_LINE
 
@@ -95,7 +99,7 @@ def stringify_value(value: Any) -> str:
 
 
 def make_indent(step: int) -> str:
-    return f"{fconsts.SPACE * fconsts.INDENT_SIZE * step}"
+    return fconsts.SPACE * fconsts.INDENT_SIZE * step
 
 
 def make_prefix(status: str) -> str:

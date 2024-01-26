@@ -1,11 +1,33 @@
 from typing import Any
 
-from gendiff import consts
+from gendiff import consts, parser
+from gendiff.format import formatters
+
+
+def generate_diff(
+    file_path_1: str,
+    file_path_2: str,
+    format: str = consts.STYLISH,
+) -> str:
+    """
+    Generate a textual formatted diff report between two files.
+
+    Args:
+        file_path_1: Path to the first file to compare.
+        file_path_2: Path to the second file to compare.
+        formatter (opt): Function to format the diff output. Default: stylish.
+    """
+    file_1_data = parser.parse_data_from_file(file_path_1)
+    file_2_data = parser.parse_data_from_file(file_path_2)
+    diffs = get_diffs(file_1_data, file_2_data)
+    formatter = formatters.get_formatter(format)
+
+    return formatter(diffs)
 
 
 def get_diffs(
-    dict1: dict[str, Any],
-    dict2: dict[str, Any],
+    dict_1: dict[str, Any],
+    dict_2: dict[str, Any],
 ) -> list[dict[str, Any]]:
     """
     Creates a list of dictionaries representing the differences
@@ -15,14 +37,14 @@ def get_diffs(
         List contains dictionaries of diff items.
         For nested dictionaries, it contains recursive diff lists.
     """
-    keys = sorted(set(dict1).union(dict2))
-    return [create_diff_item(key, dict1, dict2) for key in keys]
+    keys = sorted(set(dict_1).union(dict_2))
+    return [create_diff_item(key, dict_1, dict_2) for key in keys]
 
 
 def create_diff_item(
     key: str,
-    dict1: dict[str, Any],
-    dict2: dict[str, Any],
+    dict_1: dict[str, Any],
+    dict_2: dict[str, Any],
 ) -> dict[str, Any]:
     """
     Generates a dictionary representing of a single diff item.
@@ -30,25 +52,25 @@ def create_diff_item(
     Returns:
         Dictionary contains the status of the item, key and values.
     """
-    status = calculate_status(key, dict1, dict2)
+    status = calculate_status(key, dict_1, dict_2)
 
     if status == consts.NESTED:
         return {
             consts.KEY: key,
             consts.STATUS: consts.NESTED,
-            consts.ELEMENTS: get_diffs(dict1.get(key), dict2.get(key)),
+            consts.ELEMENTS: get_diffs(dict_1.get(key), dict_2.get(key)),
         }
 
     if status == consts.CHANGED:
         return {
             consts.KEY: key,
             consts.STATUS: status,
-            consts.BEFORE: dict1.get(key),
-            consts.AFTER: dict2.get(key),
+            consts.BEFORE: dict_1.get(key),
+            consts.AFTER: dict_2.get(key),
         }
 
     # The only one dict contains the key or both dicts contain the same value
-    value = dict1.get(key) if key in dict1 else dict2.get(key)
+    value = dict_1.get(key) if key in dict_1 else dict_2.get(key)
 
     return {
         consts.KEY: key,
@@ -59,27 +81,24 @@ def create_diff_item(
 
 def calculate_status(
     key: str,
-    dict1: dict[str, Any],
-    dict2: dict[str, Any]
+    dict_1: dict[str, Any],
+    dict_2: dict[str, Any]
 ) -> str:
     """
     Determines the status of an item based on its presence and values.
-
-    Options:
-        added, deleted, unchanged, nested, or changed.
     """
-    value1, value2 = dict1.get(key), dict2.get(key)
+    value_1, value_2 = dict_1.get(key), dict_2.get(key)
 
-    if key not in dict1:
+    if key not in dict_1:
         return consts.ADDED
 
-    if key not in dict2:
+    if key not in dict_2:
         return consts.DELETED
 
-    if value1 == value2:
+    if value_1 == value_2:
         return consts.UNCHANGED
 
-    if is_nested_diff(key, dict1, dict2):
+    if is_nested_diff(key, dict_1, dict_2):
         return consts.NESTED
 
     return consts.CHANGED
@@ -87,12 +106,12 @@ def calculate_status(
 
 def is_nested_diff(
     key: str,
-    dict1: dict[str, Any],
-    dict2: dict[str, Any]
+    dict_1: dict[str, Any],
+    dict_2: dict[str, Any]
 ) -> bool:
     return (
-        isinstance(dict1.get(key), dict)
-        and isinstance(dict2.get(key), dict)
+        isinstance(dict_1.get(key), dict)
+        and isinstance(dict_2.get(key), dict)
     )
 
 

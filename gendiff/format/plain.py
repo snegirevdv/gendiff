@@ -29,7 +29,7 @@ def make_item_block(diff_item: dict[str, Any], prefix: str) -> str:
     status = diff.get_status(diff_item)
 
     if status == consts.NESTED:
-        new_prefix = prefix + key + fconsts.DELIMETER
+        new_prefix = f"{prefix}{key}{fconsts.DELIMETER}"
         elements = diff.get_nested_elements(diff_item)
         return render_view(elements, new_prefix)
 

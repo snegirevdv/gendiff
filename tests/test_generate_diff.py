@@ -1,12 +1,11 @@
 import gendiff
 import pytest
-from gendiff import consts
-from gendiff.main import generate_diff
+from gendiff import generate_diff
 
 
 @pytest.mark.parametrize(
     "formatter",
-    [consts.STYLISH, consts.JSON, consts.PLAIN],
+    [gendiff.STYLISH, gendiff.JSON, gendiff.PLAIN],
 )
 @pytest.mark.parametrize(
     "answer_file_name, file_path_1, file_path_2",
@@ -100,14 +99,15 @@ def test_parser_encoder_failure(update_path, file_path_1, file_path_2):
     file_paths = update_path(file_path_1, file_path_2)
 
     with pytest.raises(ValueError) as e:
-        gendiff.generate_diff(*file_paths)
+        generate_diff(*file_paths)
 
     assert str(e.value) == "ERROR: Files contain invalid data"
 
 
 def test_get_formatter_failure(update_path):
     file_paths = update_path("json/plain1.json", "json/plain2.json")
-    diff1 = generate_diff(*file_paths, "#AAAAAA")
-    diff2 = generate_diff(*file_paths, consts.DEFAULT_FORMAT)
 
-    assert diff1 == diff2
+    with pytest.raises(ValueError) as e:
+        generate_diff(*file_paths, "#AAAAAA")
+
+    assert str(e.value) == "ERROR: Invalid formatter name"

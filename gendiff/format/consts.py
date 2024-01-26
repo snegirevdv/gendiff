@@ -17,6 +17,7 @@ FINISH_LINE = "}\n"
 PREFIXES = {
     consts.DELETED: "-",
     consts.UNCHANGED: " ",
+    consts.NESTED: " ",
     consts.ADDED: "+",
 }
 

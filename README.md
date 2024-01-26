@@ -17,13 +17,13 @@
 - [Screencasts](#screencasts)
 
 ## Features
-Gendiff is a command-line script and library for comparing two files and displaying the differences between them. 
+Gendiff is a command-line script and library for comparing two files and displaying the differences between them.
 - **Supported Formats**: Gendiff supports files in JSON and YAML formats.
 - **Supported Output Formats**: Gendiff provides three formatters to display differences:
   - **Stylish**: A JSON-like format with changes marked by "+" (added) and "-" (deleted).
   - **Plain**: A plain text report of changes, showing property updates.
   - **JSON**: Standard JSON format representation.
-- **Nested Structure Support**: Gendiff handles nested structures, allowing deep comparisons of complex data. 
+- **Nested Structure Support**: Gendiff handles nested structures, allowing deep comparisons of complex data.
 
 ## Minimal Requirements
 - Python 3.6 or higher
@@ -42,7 +42,7 @@ pip install --user dist/*.whl
 ## How to Use
 
 ### As a Command-Line Script:
-You can use Gendiff directly from the command line to compare two files. 
+You can use Gendiff directly from the command line to compare two files.
 To get started:
 - Install the utility.
 - Use the command `gendiff -h` to view the help menu and available options.
@@ -55,24 +55,24 @@ gendiff file1.yml file2.yml --format plain
 ### As a Library:
 Gendiff can also be used as a Python library.
 ```python
-from gendiff import generate_diff, get_diffs
+from gendiff import generate_diff, get_diffs, PLAIN
 
 # Generate a diff using the default formatter
 diff = generate_diff('file1.json', 'file2.json')
 
-# Generate a diff using different formatter
-diff_plain = generate_diff('file1.json', 'file2.json', format='plain')
+# Generate a diff using different formatter (options: STYLISH/PLAIN/JSON)
+diff_plain = generate_diff('file1.json', 'file2.json', format=PLAIN)
 
 # Generate a diff as a list of dictionaries
 diff = get_diffs('file1.json', 'file2.json')
 ```
 
 ### Saving the Diff to a File:
-You can also save the generated diff to a file. 
+You can also save the generated diff to a file.
 ```python
 from gendiff import generate_diff
 
-diff = generate_diff('file1.json', 'file2.json', format='json')
+diff = generate_diff('file1.json', 'file2.json', format=JSON')
 
 with open('diff.json', 'w') as file:
     file.write(diff)
