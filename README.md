@@ -72,7 +72,7 @@ You can also save the generated diff to a file.
 ```python
 from gendiff import generate_diff, JSON
 
-diff = generate_diff('file1.json', 'file2.json', format=JSON')
+diff = generate_diff('file1.json', 'file2.json', format=JSON)
 
 with open('diff.json', 'w') as file:
     file.write(diff)
