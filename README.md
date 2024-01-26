@@ -70,7 +70,7 @@ diff = get_diffs('file1.json', 'file2.json')
 ### Saving the Diff to a File:
 You can also save the generated diff to a file.
 ```python
-from gendiff import generate_diff
+from gendiff import generate_diff, JSON
 
 diff = generate_diff('file1.json', 'file2.json', format=JSON')
 
